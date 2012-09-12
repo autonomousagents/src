@@ -8,6 +8,8 @@ public class Predator implements Agent{
 		myPos = startPos;
 	}
 	
+
+	//bla
 	@Override
 	public void doMove(Position other) {
 		
@@ -16,6 +18,7 @@ public class Predator implements Agent{
 		
 		int myPosX = myPos.getX();
 		int myPosY = myPos.getY();
+
 		
 		Position[] pos = new Position[4]; 
 		pos[0] = new Position(myPosX, (myPosY+Environment.HEIGHT-1)% Environment.HEIGHT);
