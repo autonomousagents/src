@@ -5,9 +5,12 @@ public class Environment {
 	private boolean isEnded;
 	private Agent predator;
 	private Agent prey;
+	private int predatorType=-1;
 	
-	public Environment(){
-		isEnded = false;
+	public Environment(int predatorType){
+		
+		this.predatorType = predatorType;
+		this.isEnded = false;
 		
 		reset();
 	}
@@ -38,8 +41,15 @@ public class Environment {
 	
 	public void reset() {
 		
-		prey = new Prey(new Position(5,5));
-		predator = new Predator(new Position(0,0));
+		switch(predatorType) {
+			case 0: predator = new PredatorRandom(new Position(0,0)); break;
+			case 1: //predator = new PredatorPolicyEvaluation(...) break;
+			case 2: //predator = new PredatorValueIteration(...) break;
+			case 3: //predator =  new PredatorPolicyIteration(..); break;
+			default: break;
+		}
+		
+		prey = new Prey(new Position(5,5));		
 		isEnded = false;
 	
 	}
