@@ -9,15 +9,14 @@ public class Environment {
 	public Environment(){
 		isEnded = false;
 		
-		prey = new Prey(new Position(5,5));
-		predator = new Predator(new Position(0,0));
+		reset();
 	}
 	
 	public void nextTimeStep(){
 		predator.doMove(getPreyPos());
 		if (!checkForEnd()) {
 			prey.doMove(getPredatorPos());
-		}
+		}		
 	}
 	
 	public boolean isEnded(){
@@ -35,5 +34,13 @@ public class Environment {
 	private boolean checkForEnd(){
 		isEnded = getPredatorPos().equals(getPreyPos());
 		return isEnded;
+	}
+	
+	public void reset() {
+		
+		prey = new Prey(new Position(5,5));
+		predator = new Predator(new Position(0,0));
+		isEnded = false;
+	
 	}
 }
