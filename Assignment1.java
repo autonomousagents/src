@@ -25,18 +25,45 @@ public class Assignment1 {
 		// timesteps heeft waarde van anatal timesteps nu
 	}
 	
+	/**
+	 * Calculate the variance of an array of ints 
+	 * @param array
+	 * @param average
+	 * @return
+	 */
+	public double calculateVariance(int[] array, double average) {
+		
+		double variance = 0;
+		for (int trial : array) 			
+			variance += Math.pow(trial, 2);			
+		variance /= array.length;
+		variance -= Math.pow(average, 2);
+		return variance;		
+	}
+	
+	/**
+	 * 2.2 First must
+	 * Shows average and standard deviation of 100 runs of the number of steps needed in an
+	 * environment where the predator moves randomly
+	 */
 	public void firstMust() {
 		
 		int nrRuns = 100;
 		int totalTimeSteps = 0;
-	
-		for (int i=0; i < nrRuns; i++) {
-			
+		int timeStepsArray[] = new int[nrRuns];
+		
+		for (int i=0; i < nrRuns; i++) {			
 			start();
 			totalTimeSteps += timesteps;
-			
+			timeStepsArray[i] = timesteps;			
 		}
-		System.out.println("Average timesteps over "  + nrRuns + " trials: " + (double)totalTimeSteps/(double)nrRuns);
+		
+		double averageTimeSteps = (double)totalTimeSteps/(double)nrRuns;
+		double SD = Math.sqrt(calculateVariance(timeStepsArray,averageTimeSteps));
+		
+		
+		System.out.println("Average timesteps over "  + nrRuns + " trials: " + averageTimeSteps);
+		System.out.println("Standard deviation over " + nrRuns + " trials: " + SD);
 		
 	}
 	
