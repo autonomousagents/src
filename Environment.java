@@ -53,4 +53,11 @@ public class Environment {
 		isEnded = false;
 	
 	}
+	
+	public static int reward( Position prey, Position predator ){
+		if (prey.getX()==predator.getX() && prey.getY()==predator.getY())
+			return 10;
+		else
+			return 0;
+	}
 }
