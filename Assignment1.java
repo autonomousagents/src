@@ -5,7 +5,7 @@ public class Assignment1 {
 	private View view;
 	private int timesteps;
 	
-	private static final int PredatorRandom = 0, PredatorPolicyEvalution = 1, PredatorValueIteration = 2, PredatorPolicyIteration=3;
+	private static final int PredatorRandom = 0, PredatorPolicyEvaluation = 1, PredatorValueIteration = 2, PredatorPolicyIteration=3;
 	
 	public Assignment1() {
 		env = new Environment(PredatorRandom);
