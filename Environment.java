@@ -8,6 +8,9 @@ public class Environment {
 	
 	public Environment(){
 		isEnded = false;
+		
+		prey = new Prey(new Position(5,5));
+		predator = new Predator(new Position(0,0));
 	}
 	
 	public void nextTimeStep(){
