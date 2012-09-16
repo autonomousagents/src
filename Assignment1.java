@@ -23,7 +23,6 @@ public class Assignment1 {
 			timesteps++;	
 		}
 		System.out.println("Timesteps:" + timesteps);
-		// timesteps heeft waarde van anatal timesteps nu
 	}
 	
 	/**
@@ -48,7 +47,9 @@ public class Assignment1 {
 	 * environment where the predator moves randomly
 	 */
 	public void firstMust() {
-		
+
+                env.setPredatorType(PredatorRandom);
+                
 		int nrRuns = 100;
 		int totalTimeSteps = 0;
 		int timeStepsArray[] = new int[nrRuns];
@@ -67,11 +68,17 @@ public class Assignment1 {
 		System.out.println("Standard deviation over " + nrRuns + " trials: " + SD);
 		
 	}
+
+        public void firstShould() {            
+            env.setPredatorType(PredatorPolicyEvaluation);
+            env.reset();
+        }
 	
 	public static void main (String[] args) {
 		Assignment1 a = new Assignment1();
 		//a.start();
 		a.firstMust();
+               // a.firstShould();
 	}
 	
 	

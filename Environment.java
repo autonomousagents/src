@@ -12,7 +12,7 @@ public class Environment {
 		this.predatorType = predatorType;
 		this.isEnded = false;
 		
-		reset();
+		//reset();
 	}
 	
 	public void nextTimeStep(){
@@ -40,18 +40,19 @@ public class Environment {
 	}
 	
 	public void reset() {
-		
+
+            prey = new Prey(new Position(5,5));
+            isEnded = false;
+
 		switch(predatorType) {
 			case 0: predator = new PredatorRandom(new Position(0,0)); break;
-			case 1: //predator = new PredatorPolicyEvaluation(...) break;
+			case 1: predator = new PredatorPolicyEvaluation(); break;
 			case 2: //predator = new PredatorValueIteration(...) break;
 			case 3: //predator =  new PredatorPolicyIteration(..); break;
 			default: break;
 		}
 		
-		prey = new Prey(new Position(5,5));		
-		isEnded = false;
-	
+		
 	}
 	
 	public static double reward( Position prey, Position predator ){
@@ -60,4 +61,10 @@ public class Environment {
 		else
 			return 0;
 	}
+
+        public void setPredatorType(int nr) {
+
+            predatorType = nr;
+        }
+
 }

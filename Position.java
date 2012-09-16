@@ -30,8 +30,7 @@ public class Position {
 	}
 	
 	public boolean equals(Position other){
-		if(this.x == other.getX() && this.y == other.getY()) return true;
-		return false;
+		return (this.x == other.getX() && this.y == other.getY()) ;
 	}
 	
 }
