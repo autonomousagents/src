@@ -4,27 +4,26 @@ public class PredatorPolicyEvaluation implements Agent {
 	private final static double chancesPositions[] = {0.2 , 0.2, 0.2, 0.2, 0.2};
 	private double VMatrix[][];
 	
-//	/**
-//	* @param position of state in QMatrix or NMatrix
-//	* @return State (struct) with correct x and y coordinates (fields)
-//	*/
-//	State getState(int nr) {
-//
-//	    int xpos= nr % worldWidth;
-//	    int ypos= (nr - xpos) / worldWidth;
-//	    State s ={xpos, ypos, nr};
-//	    return s;
-//	}
-//
-//
-//	/**
-//	* @param State (struct) with correct x and y coordinates (fields)
-//	* @return position of state in QMatrix or NMatrix
-//	*/
-//	int getStateNr(State state) { // positie (hoogte) in QMatrix en NMatrix tabel
-//
-//	    return state.y * worldWidth + state.x;
-//	}
+	/**
+	* @param index of state in VMatrix
+	* @return Position with correct x and y coordinates (fields)
+	*/
+	Position getPosition(int nr) {
+
+	    int x = nr % Environment.WIDTH;
+	    int y = (nr - x) /  Environment.WIDTH;
+	    return new Position(x, y);
+	}
+
+
+	/**
+	* @param Position with correct x and y coordinates (fields)
+	* @return index of state in VMatrix
+	*/
+	int getStateNr(Position state) { 
+
+	    return state.getY() * Environment.WIDTH + state.getX();
+	}
 
 	
 	// return array always length of chancesPositions.length
