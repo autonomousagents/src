@@ -4,7 +4,6 @@ public class PredatorPolicyEvaluation implements Agent {
 	private final static double chancesPositions[] = {0.2 , 0.2, 0.2, 0.2, 0.2};
 	private double VMatrix[][];
 	
-	
 //	/**
 //	* @param position of state in QMatrix or NMatrix
 //	* @return State (struct) with correct x and y coordinates (fields)
@@ -30,16 +29,57 @@ public class PredatorPolicyEvaluation implements Agent {
 	
 	// return array always length of chancesPositions.length
 	// ORDER IS: // up, right, down left, still
-	private int[] chancesPositionsPrey(int currentPositionPrey) {
+	private int[] chancesPositionsPrey(int posPredator, int[] PositionPrey) {
+		int[] chanceArray = new int[chancesPositions.length];
+		boolean predatorNextToPrey = false;
+		int predatorEqualsIndex;
+		for(int i = 0;i< chancesPositions.length;i++){
+			if(PositionPrey[i] == posPredator){
+				predatorEqualsIndex = i;
+				predatorNextToPrey = true;
+				break;
+			}
+		}
 		
+		//determine chances
 		
+		return chanceArray;
+	}
+	
+	/*private int[] newPositionsPrey(int posPredator, int currentPositionPrey){
 		return null;
+	}*/
+	
+	private int[] newPositions(int currentPos) {
+		int[] positionArray = new int[chancesPositions.length];
+		//up
+		positionArray[0] = currentPos-Environment.WIDTH < 0?
+								currentPos+(Environment.HEIGHT*Environment.WIDTH)-Environment.WIDTH:
+								currentPos-Environment.WIDTH;
+		//right
+		positionArray[1] = (currentPos+1)%Environment.WIDTH == 0?
+								currentPos - Environment.WIDTH:
+								currentPos +1;
+		//left
+		positionArray[2] = currentPos == 0? 
+								Environment.WIDTH : 
+								(currentPos -1)% Environment.WIDTH == Environment.WIDTH-1? 
+										currentPos + Environment.WIDTH -1: currentPos -1;
+		//down
+		positionArray[3] = currentPos+Environment.WIDTH>Environment.HEIGHT*Environment.WIDTH?
+								currentPos-(Environment.HEIGHT*Environment.WIDTH)+Environment.WIDTH:
+								currentPos+Environment.WIDTH;
+		//still
+		positionArray[4] = currentPos;
+		
+		return positionArray;
 	}
 
 	private double getPositionValue(int posPredator, int posPrey) {
 		
-		int[] chancesPreyPositions = chancesPositionsPrey(posPrey);
 		//int[] newPreyPositions = newPositionsPrey(posPredator, posPrey);
+		int[] newPreyPositions = newPositions(posPrey);
+		int[] chancesPreyPositions = chancesPositionsPrey(posPredator, newPreyPositions);
 		
 		double totalValue=0;
 		for (int i=0; i < chancesPreyPositions.length; i++) {
@@ -86,8 +126,7 @@ public class PredatorPolicyEvaluation implements Agent {
 		
 	}
 	
-	
-	public PredatorPolicyEvaluation() {
+	public PredatorPolicyEvaluation(Position startPos) {
 		 VMatrix = new double[Environment.HEIGHT*Environment.WIDTH][Environment.HEIGHT*Environment.WIDTH];
 	}
 	
