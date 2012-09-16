@@ -1,8 +1,13 @@
 
 public class PredatorPolicyEvaluation implements Agent {
-													// up, right, down left, still
-	private final static double chancesPositions[] = {0.2 , 0.2, 0.2, 0.2, 0.2};
+													
+	private final static double chancesPositions[] = {0.2 , 0.2, 0.2, 0.2, 0.2}; // up, right, down left, still
+        private final static double chancePreyMoves= 0.2;
+        private final static int nrMovesPrey =4;
+
 	private double VMatrix[][];
+
+        private double discountFactor=0.9;
 	
 	/**
 	* @param index of state in VMatrix
@@ -28,29 +33,33 @@ public class PredatorPolicyEvaluation implements Agent {
 	
 	// return array always length of chancesPositions.length
 	// ORDER IS: // up, right, down left, still
-	private int[] chancesPositionsPrey(int posPredator, int[] PositionPrey) {
-		int[] chanceArray = new int[chancesPositions.length];
-		boolean predatorNextToPrey = false;
-		int predatorEqualsIndex;
-		for(int i = 0;i< chancesPositions.length;i++){
-			if(PositionPrey[i] == posPredator){
+	private double[] chancesPositionsPrey(int posPredator, int[] positionsPrey) {
+                //init to default (not next to predator)
+                double chanceArray[] = {chancePreyMoves/nrMovesPrey,chancePreyMoves/nrMovesPrey,chancePreyMoves/nrMovesPrey,chancePreyMoves/nrMovesPrey, // up, right, down, left
+                                        1-chancePreyMoves/nrMovesPrey};// still
+
+                // find in what direction prey will stand on  predator, if there is one
+		int predatorEqualsIndex = -1;
+		for(int i = 0;  i < chancesPositions.length && predatorEqualsIndex == -1 ; i++)
+			if(positionsPrey[i] == posPredator) 
 				predatorEqualsIndex = i;
-				predatorNextToPrey = true;
-				break;
-			}
-		}
-		
-		//determine chances
-		
+                    
+		 // prey was next to predator at that direction-index
+		if (predatorEqualsIndex != -1) {  
+                    for(int i = 0; i< chancesPositions.length-1; i++)
+                         chanceArray[i] = chancePreyMoves / (nrMovesPrey-1);
+
+                    chanceArray[predatorEqualsIndex]=0;
+                }
+
 		return chanceArray;
 	}
 	
-	/*private int[] newPositionsPrey(int posPredator, int currentPositionPrey){
-		return null;
-	}*/
 	
+	// --> deze is voor zowel prey als predator goed toch? - Agnes
 	private int[] newPositions(int currentPos) {
 		int[] positionArray = new int[chancesPositions.length];
+
 		//up
 		positionArray[0] = currentPos-Environment.WIDTH < 0?
 								currentPos+(Environment.HEIGHT*Environment.WIDTH)-Environment.WIDTH:
@@ -74,35 +83,36 @@ public class PredatorPolicyEvaluation implements Agent {
 		return positionArray;
 	}
 
+        
 	private double getPositionValue(int posPredator, int posPrey) {
 		
 		//int[] newPreyPositions = newPositionsPrey(posPredator, posPrey);
 		int[] newPreyPositions = newPositions(posPrey);
-		int[] chancesPreyPositions = chancesPositionsPrey(posPredator, newPreyPositions);
+		double[] chancesPreyPositions = chancesPositionsPrey(posPredator, newPreyPositions);
 		
 		double totalValue=0;
 		for (int i=0; i < chancesPreyPositions.length; i++) {
 			
-			totalValue += chancesPreyPositions[i]  ;//* ( Reward(state) + discountFactor*(VMatrix[ posPredator ] [ newPreyPositions[i] ]
+			totalValue += chancesPreyPositions[i]  * // pi(s,a)
+                                                // P^{a}_{s s'}  ontbreekt in deze setting
+                                                (   Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator)) + // R^{a}_{s s'}
+                                                    discountFactor * VMatrix[ posPredator ] [ newPreyPositions[i] ] // gamma * V_k{s')
+                                                );
 			
 		}
-		return (Double) null;
+		return totalValue;
 		
 	}
 	
-	private int[] newPositionsPredator(int currentPositionPredator) {
-		
-		
-		return null;
-	}
+	
 	
 	public double calculateValue(int posPredator, int posPrey) {
 		
 		double total =0;
 		
-		int[] possiblePositions = newPositionsPredator(posPredator);
+		int[] possiblePositions = newPositions(posPredator);
 		
-		for (int i=0; i < 5 /*aantal posities */; i++) {			
+		for (int i=0; i < chancesPositions.length; i++) {
 			
 			double TEMP  = chancesPositions[i] * getPositionValue( possiblePositions[i] , posPrey);
 			
