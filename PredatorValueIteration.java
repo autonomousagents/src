@@ -8,48 +8,92 @@ public class PredatorValueIteration implements Agent{
 	Position startPosition;
 	private double v[][][][] = new double[Environment.HEIGHT][Environment.WIDTH][Environment.HEIGHT][Environment.WIDTH];
 	double theta, gamma;
+	private static final int nrActions = 5;
+	double vNew[][][][];
 	
 	public PredatorValueIteration(Position startPos){
 		myPos = startPos;
 		startPosition=startPos;
-		
+		setParams();
 		fillV();
 		calcV();
-		//bepaal Policy
-	}
+		// print table for prey at (5,5)
+		printTable();
+	}	
 
 	private void calcV() {
 		double delta ;
-		double[] vPerAction= new double [5];
+		double[] vPerAction= new double [nrActions];
+		int nrIterations = 0;
 		do {
 			delta = 0.0;
-			double vNew[][][][] = new double[Environment.HEIGHT][Environment.WIDTH][Environment.HEIGHT][Environment.WIDTH];
+			vNew = new double[Environment.HEIGHT][Environment.WIDTH][Environment.HEIGHT][Environment.WIDTH];
 			for(int i = 0; i < Environment.HEIGHT; i++){
 				for(int j = 0; j < Environment.WIDTH; j++){
 					for(int k = 0; k < Environment.HEIGHT; k++){
 						for(int l = 0; l<Environment.WIDTH;l++){
 							Arrays.fill(vPerAction,0);
-							for(int m = 0; l<5;l++){
-								vPerAction = calcVPerAction(i,j,k,l);
-							}
+							vPerAction = calcVPerAction(i,j,k,l);
+							printArray(vPerAction);
 							vNew[i][j][k][l] = getMaximum(vPerAction);
-							//als absoluut(vNew-v)> delta dan delta = |vnew-v|
+							System.out.println("vnew = " +vNew[i][j][k][l]  +" v = "+v[i][j][k][l]);
+							double difference = Math.abs(vNew[i][j][k][l]-v[i][j][k][l]);
+							if(difference>delta){
+								delta = difference;
+							}
 						}
 					}
 				}
 			}
 			v = vNew;
+			nrIterations++;
 		} while(delta>theta);
+		System.out.println("nr iterations until convergence = "+nrIterations);
 	}
+
 	private double[] calcVPerAction(int xPred,int yPred,int xPrey, int yPrey) {
-		//intitaliseer de rij die je terug gaat geven
-		//vraag posities op waar predator heen kan
-		//voor elke positie
-			//vraag states op waar je kan zijn na uitvoeren actie (locaties prey, pas op constraint dat prey niet tegen predator aan komt)
-			// calc V met deze gegevens		
-		
-		//deze return aanpassen
-		return null;
+		double [] vPerAction = new double[nrActions];
+		Position [] actionsPred = getPostions(new Position(xPred, yPred));
+		Position [] actionsPrey;
+		double [] pResultingStates;
+		//v k+1 per action
+		double vkP1;
+		// for each resulting position of possible actions of the predator
+		for(int i = 0; i<nrActions;i++){
+			vkP1 = 0.0;
+			//for each possible action of the prey determining s'
+			actionsPrey = getPostions(new Position(xPrey, yPrey));
+			pResultingStates = probabilities(actionsPred[i],actionsPrey);
+			for(int j = 0; j<nrActions;j++){
+				//V k(s')
+				double vk = v[actionsPred[i].getX()][actionsPred[i].getY()][actionsPrey[j].getX()][actionsPrey[j].getY()];
+				// calculate v k+1 per action 
+				vkP1+= pResultingStates[i]*(Environment.reward(actionsPrey[j], actionsPred[i])+ vk);
+			}
+			vPerAction[i] = vkP1;
+		}		
+		return vPerAction;
+	}
+	
+	private double [] probabilities (Position predator, Position [] prey){
+		double [] probabilities = {0.05,0.05,0.05,0.05,0.8};
+		int onPredator = -1;
+		//check for each action if the prey steps on the predator
+		for(int i = 0;i<nrActions-1;i++){
+			//if the prey steps on the predator set the probability of that state to zero
+			if(prey[i].getX()==predator.getX()&&prey[i].getY()==predator.getY()){
+				onPredator = i;
+				probabilities[i]=0.0;
+			}
+		}
+		//If necessary adjust the resulting probabilities
+		if(onPredator != -1){
+			for(int i = 0;i<nrActions-1;i++){
+				if(i!=onPredator)
+					probabilities[i] = 0.2/3.0;
+			}
+		}
+		return probabilities;
 	}
 	
 	private Position [] getPostions(Position p){
@@ -61,13 +105,12 @@ public class PredatorValueIteration implements Agent{
 		pos[4] = new Position(p.getX(),p.getY());
 		return pos;
 	}
-
-	// private calcPolicy(){...}
 	
 	@Override
 	public void doMove(Position other) {
-		// TODO Auto-generated method stub
-		//uit policy opvragen 
+		Position [] possibleMoves = getPostions(myPos);
+		int maxAction = getBestAction(possibleMoves, other);
+		myPos = possibleMoves[maxAction];
 	}
 
 	@Override
@@ -94,6 +137,11 @@ public class PredatorValueIteration implements Agent{
 		this.gamma = gamma;
 	}
 	
+	public void setParams(){
+		this.theta= 0.5;
+		this.gamma = 0.8;
+	}
+	
 	private double getMaximum(double [] values){
 		double max = values[0];
 		for(int i = 1; i<values.length;i++){
@@ -103,4 +151,41 @@ public class PredatorValueIteration implements Agent{
 		}
 		return max;
 	}
+	
+	private int getBestAction(Position [] possibleMoves, Position prey){
+		int xPrey = prey.getX(),yPrey = prey.getY();
+		int maxAction = -1;
+		double maxV = 0.0;
+		for(int i = 0; i<nrActions;i++){
+			int xPred = possibleMoves[i].getX();
+			int yPred = possibleMoves[i].getY();
+			if(v[xPred][yPred][xPrey][yPrey]>maxV){
+				maxAction = i;
+			}
+		}
+		return maxAction;
+	}
+	
+	public double [][][][] getValues(){
+		return v;
+	}
+	
+	private void printTable() {
+		for(int j = 0; j < Environment.WIDTH; j++){
+			for(int i = 0; i < Environment.HEIGHT; i++){
+				System.out.print(v[i][j][5][5]+" ");
+			}				
+			System.out.print("\n");
+		}
+	}
+	
+	private void printArray(double[] array) {
+		for(int i = 0; i<array.length;i++){
+			System.out.print(array[i]+" ");
+		}		
+		System.out.print("\n");
+	}
+	
+
+
 }

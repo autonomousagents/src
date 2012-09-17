@@ -73,11 +73,16 @@ public class Assignment1 {
             env.setPredatorType(PredatorPolicyEvaluation);
             env.reset();
         }
-	
-	public static void main (String[] args) {
+        
+        public void secondMust(){
+        	env.setPredatorType(PredatorValueIteration);
+        	env.reset();
+        }
+        
+        public static void main (String[] args) {
 		Assignment1 a = new Assignment1();
 		//a.start();
-		a.firstMust();
+		a.secondMust();
                // a.firstShould();
 	}
 	
