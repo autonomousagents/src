@@ -75,7 +75,8 @@ public class PredatorPolicyEvaluation implements Agent {
     	Position worldPos = getPosition(currentPos);
     	int[] positionArray = new int[chancesPositions.length];
     	Position[] worldPositionArray = new Position[chancesPositions.length];    	
-    	Arrays.fill(worldPositionArray,new Position(worldPos));
+    	for (int i=0; i < worldPositionArray.length; i++)
+    		worldPositionArray[i]= new Position(worldPos);
     	
     	// up
     	worldPositionArray[0].setY(worldPos.getY() == 0 ? Environment.HEIGHT-1 : worldPos.getY()-1);
@@ -85,7 +86,8 @@ public class PredatorPolicyEvaluation implements Agent {
     	worldPositionArray[2].setY(worldPos.getY() == Environment.HEIGHT-1 ? 0 : worldPos.getY()+1);
     	//left
     	worldPositionArray[3].setX(worldPos.getX() == 0? Environment.WIDTH-1 : worldPos.getX()-1);
-    	    	
+    	
+    	
 		for (int i=0; i< worldPositionArray.length; i++) 
 			positionArray[i]=getStateNr(worldPositionArray[i]);
 		
@@ -132,21 +134,25 @@ public class PredatorPolicyEvaluation implements Agent {
         	
         
         double totalValue = 0;
-        for (int i = 0; i < chancesPreyPositions.length; i++) {
+        for (int i = 0; i < 5; i++) {
 
+        	if (chancesPreyPositions[4]==1) {
+            	System.out.println(Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator)));
+
+        	}
             totalValue += chancesPreyPositions[i] * // P^{a}_{s s'}
                     (	Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator))  // R^{a}_{s s'}
                     	+ (discountFactor * VMatrix[posPredator][newPreyPositions[i]]) // gamma * V_k{s')
                     );
 
         }
-//        if (chancesPreyPositions[3]>0.05) {
+        //if (totalValue>0) {
 //        	
 //        	for (int i=0; i < chancesPreyPositions.length; i++) 
 //        		System.out.print(chancesPreyPositions[i]+" ");
 //        	System.out.println();
-//        	System.out.println("totalValue: " +totalValue);
-//        }
+        	//System.out.println("totalValue: " +totalValue);
+        //}
         return totalValue;
 
     }
@@ -206,7 +212,7 @@ public class PredatorPolicyEvaluation implements Agent {
         
         for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
         	Arrays.fill(VMatrix[i], 0);
-        	VMatrix[i][i]= Environment.reward(getPosition(i), getPosition(i));            
+        	//VMatrix[i][i]= Environment.reward(getPosition(i), getPosition(i));            
         }
         
         //printVMatrix();
