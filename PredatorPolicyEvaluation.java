@@ -2,10 +2,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Locale;
 
 public class PredatorPolicyEvaluation implements Agent {
 
@@ -17,262 +14,228 @@ public class PredatorPolicyEvaluation implements Agent {
     private double cutoffValueDiff = 0.1;
 
     /**
-     * @param index of state in VMatrix
-     * @return Position with correct x and y coordinates (fields)
+     * @param number of a position (index of row/column in VMatrix)
+     * @return a Position object with correct x and y coordinates (fields), denoting the corresponding Cartesian position
      */
-    Position getPosition(int nr) {
+    Position getPosition(int posNr) {
 
-        int x = nr % Environment.WIDTH;
-        int y = (int)(  (nr - x) / Environment.WIDTH);
+        int x = posNr % Environment.WIDTH;
+        int y = (int)(  (posNr - x) / Environment.WIDTH);
         return new Position(x, y);
     }
 
     /**
-     * @param Position with correct x and y coordinates (fields)
-     * @return index of state in VMatrix
+     * @param Position object with correct x and y coordinates (fields), denoting a Cartesian position
+     * @return the corresponding number of that position (index of row/column in VMatrix)
      */
-    int getStateNr(Position state) {
+    int getPosNr(Position position) {
 
-        return state.getY() * Environment.WIDTH + state.getX();
-    }
-
-    // return array always length of chancesPositions.length
-    // ORDER IS: // up, right, down left, still
-    private double[] chancesPositionsPrey(int posPredator, int posPrey, int[] positionsPrey) {
-    
-    	 
-    	if(posPrey == posPredator)
-    		return new double[]{0,0,0,0,1};
-    	else {
-	    	//init to default (not next to predator)
-	        double[] chanceArray = {chancePreyMoves / nrMovesPrey, chancePreyMoves / nrMovesPrey, chancePreyMoves / nrMovesPrey, chancePreyMoves / nrMovesPrey, // up, right, down, left
-	            1 - chancePreyMoves};// still
-	
-	        // find in what direction prey will stand on  predator, if there is one
-	        int predatorEqualsIndex = -1;
-	        for (int i = 0; i < chancesPositions.length && predatorEqualsIndex == -1; i++) {
-	            if (positionsPrey[i] == posPredator) {
-	                predatorEqualsIndex = i;
-	            }
-	        }
-	
-	        // prey was next to predator at that direction-index
-	        if (predatorEqualsIndex != -1) {
-	            for (int i = 0; i < chancesPositions.length - 1; i++) {
-	                chanceArray[i] = chancePreyMoves / (nrMovesPrey - 1);
-	            }
-	
-	            chanceArray[predatorEqualsIndex] = 0;	         
-	        }
-	        
-	        return chanceArray;
-       
-    	}
-    }
-
-    private int[] newPositions(int currentPos) {
-    	
-    	Position worldPos = getPosition(currentPos);
-    	int[] positionArray = new int[chancesPositions.length];
-    	Position[] worldPositionArray = new Position[chancesPositions.length];    	
-    	for (int i=0; i < worldPositionArray.length; i++)
-    		worldPositionArray[i]= new Position(worldPos);
-    	
-    	// up
-    	worldPositionArray[0].setY(worldPos.getY() == 0 ? Environment.HEIGHT-1 : worldPos.getY()-1);
-    	//right
-    	worldPositionArray[1].setX(worldPos.getX() == Environment.WIDTH-1 ? 0 : worldPos.getX()+1);
-    	// down
-    	worldPositionArray[2].setY(worldPos.getY() == Environment.HEIGHT-1 ? 0 : worldPos.getY()+1);
-    	//left
-    	worldPositionArray[3].setX(worldPos.getX() == 0? Environment.WIDTH-1 : worldPos.getX()-1);
-    	
-    	
-		for (int i=0; i< worldPositionArray.length; i++) 
-			positionArray[i]=getStateNr(worldPositionArray[i]);
-		
-		return positionArray;
-    }
-    
-    // --> deze is voor zowel prey als predator goed toch? - Agnes
-//    private int[] newPositions(int currentPos) {
-//        int[] positionArray = new int[chancesPositions.length];
-//
-//        //up
-//        positionArray[0] = currentPos - Environment.WIDTH < 0
-//                ? currentPos + (Environment.HEIGHT * Environment.WIDTH) - Environment.WIDTH
-//                : currentPos - Environment.WIDTH;
-//        //right
-//        positionArray[1] = (currentPos + 1) % Environment.WIDTH == 0
-//                ? (currentPos+1) - Environment.WIDTH
-//                : currentPos + 1;
-//        //left
-//        positionArray[2] = currentPos == 0
-//                ? Environment.WIDTH
-//                : (currentPos - 1) % Environment.WIDTH == Environment.WIDTH - 1
-//                ? currentPos + Environment.WIDTH - 1 : currentPos - 1;
-//        //down
-//        positionArray[3] = currentPos + Environment.WIDTH > (Environment.HEIGHT * Environment.WIDTH -1)
-//                ? currentPos - (Environment.HEIGHT * Environment.WIDTH) + Environment.WIDTH
-//                : currentPos + Environment.WIDTH;
-//        //still
-//        positionArray[4] = currentPos;
-//
-////        System.out.println("newPositions");
-////        for (int i=0; i<5; i++)
-////            System.out.print(+positionArray[i] + " ");
-////        System.out.println();
-//
-//        return positionArray;
-//    }
-
-    private double getPositionValue(int posPredator, int posPrey) {
-
-        //int[] newPreyPositions = newPositionsPrey(posPredator, posPrey);
-        int[] newPreyPositions = newPositions(posPrey);
-        double[] chancesPreyPositions = chancesPositionsPrey(posPredator, posPrey, newPreyPositions);
-        	
-        
-        double totalValue = 0;
-        for (int i = 0; i < 5; i++) {
-
-        	//if (chancesPreyPositions[4]==1) {
-          //  	System.out.println(Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator)));
-
-        	//}
-            totalValue += chancesPreyPositions[i] * // P^{a}_{s s'}
-                    (	Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator))  // R^{a}_{s s'}
-                    	+ (discountFactor * VMatrix[posPredator][newPreyPositions[i]]) // gamma * V_k{s')
-                    );
-
-        }
-        //if (totalValue>0) {
-//        	
-//        	for (int i=0; i < chancesPreyPositions.length; i++) 
-//        		System.out.print(chancesPreyPositions[i]+" ");
-//        	System.out.println();
-        	//System.out.println("totalValue: " +totalValue);
-        //}
-        return totalValue;
-
-    }
-
-    public double calculateValue(int posPredator, int posPrey) {
-
-        double totalPossiblePositionsValue = 0;
-
-        int[] possiblePositions = newPositions(posPredator);
-
-        for (int i = 0; i < chancesPositions.length; i++) {
-
-            totalPossiblePositionsValue += chancesPositions[i] * // pi(s,a)
-                    						getPositionValue(possiblePositions[i], posPrey);
-           
-           // System.out.println("Position value: " + getPositionValue(possiblePositions[i], posPrey));
-        }
-
-       // System.out.println("totalPossiblePositionsValue for posPredator "+ posPredator + " (" + getPosition(posPredator).getX() + "," + getPosition(posPredator).getY() + ") : "
-       //                     + "and posPrey " + posPrey + " (" + getPosition(posPrey).getX() + "," + getPosition(posPrey).getY() + ") : " + totalPossiblePositionsValue);
-        return totalPossiblePositionsValue;
+        return position.getY() * Environment.WIDTH + position.getX();
     }
 
     /**
-     * Start of policy evaluation
+     *
+     * @param posNrPredator : the number (row-index of VMatrix) corresponding to the Cartesian position of the predator in the grid world
+     * @param posNrPrey : the number (column-index of VMatrix) corresponding to the Cartesian position of the prey in the grid world
+     * @param positionsPrey : an array containing the corresponding numbers of all new Cartesian positions the prey could move to
+     * @return an array indicating the corresponding chances (to the array positionsPrey) of the prey moving to that position
+     */
+    private double[] chancesPositionsPrey(int posPredator, int posPrey, int[] positionsPrey) {
+
+    	if(posPrey == posPredator) // then chance of standing still = 1
+    		return new double[]{0,0,0,0,1}; // up, right, down, left, still
+
+    	else {
+	    	//init to default (not next to predator)
+	        double[] chanceArray = {chancePreyMoves / nrMovesPrey, chancePreyMoves / nrMovesPrey, chancePreyMoves / nrMovesPrey, chancePreyMoves / nrMovesPrey, // up, right, down, left
+                                    1 - chancePreyMoves};// still
+	        // find in what direction prey will stand on  predator, if there is one
+	        int predatorEqualsIndex = -1;
+	        for (int i = 0; i < chancesPositions.length && predatorEqualsIndex == -1; i++) {
+	            if (positionsPrey[i] == posPredator) 
+	                predatorEqualsIndex = i;	            
+	        }
+	        // if prey was next to predator at that direction-index
+	        if (predatorEqualsIndex != -1) {
+	            for (int i = 0; i < chancesPositions.length - 1; i++) 
+	                chanceArray[i] = chancePreyMoves / (nrMovesPrey - 1);	            
+	            chanceArray[predatorEqualsIndex] = 0;
+	        }
+	        return chanceArray;
+    	}
+    }
+
+
+    /**
+     *
+     * @param currentPosNr : number corresponding to the Cartesian position of the prey / predator (resp. column- or row-index of VMatrix)
+     * @return an array containing the corresponding numbers of all new Cartesian positions the prey / predator could move to
+     */
+    private int[] newPositionsNumbers(int currentPosNr) {
+
+    	Position currentPos = getPosition(currentPosNr); // convert position-number to Position object
+    	int[] positionNumbersArray = new int[chancesPositions.length];
+    	Position[] positionsArray = new Position[chancesPositions.length];
+    	for (int i=0; i < positionsArray.length; i++)
+    		positionsArray[i]= new Position(currentPos);
+
+    	// up
+    	positionsArray[0].setY(currentPos.getY() == 0 ? Environment.HEIGHT-1 : currentPos.getY()-1);
+    	//right
+    	positionsArray[1].setX(currentPos.getX() == Environment.WIDTH-1 ? 0 : currentPos.getX()+1);
+    	// down
+    	positionsArray[2].setY(currentPos.getY() == Environment.HEIGHT-1 ? 0 : currentPos.getY()+1);
+    	//left
+    	positionsArray[3].setX(currentPos.getX() == 0? Environment.WIDTH-1 : currentPos.getX()-1);
+
+		for (int i=0; i< positionsArray.length; i++) // re-convert found Position objects to position-numbers
+			positionNumbersArray[i]=getPosNr(positionsArray[i]);
+
+		return positionNumbersArray;
+    }
+
+    /**
+     *
+     * @param posNrPredator : the number (row-index of VMatrix) corresponding to the Cartesian position of the predator in the grid world
+     * @param posNrPrey : the number (column-index of VMatrix) corresponding to the Cartesian position of the prey in the grid world
+     * @return the total expected Value the predator can get while being on the position corresponding to posNrPredator,
+     *         considering the movements the prey might make
+     */
+    private double getPositionValue(int posNrPredator, int posNrPrey) {
+
+        int[] newPreyPositions = newPositionsNumbers(posNrPrey);
+        double[] chancesPreyPositions = chancesPositionsPrey(posNrPredator, posNrPrey, newPreyPositions);
+
+        double totalValue = 0;
+        for (int i = 0; i < chancesPreyPositions.length; i++) {
+
+            totalValue +=   chancesPreyPositions[i] * // P^{a}_{s s'}
+                            (	Environment.reward(getPosition(newPreyPositions[i]), getPosition(posNrPredator))  // R^{a}_{s s'}
+                                + (discountFactor * VMatrix[posNrPredator][newPreyPositions[i]]) // gamma * V_k{s')
+                            );
+        }
+        return totalValue;
+    }
+
+
+    /**
+     *
+     * @param posNrPredator :  the number (row-index of VMatrix) corresponding to the Cartesian position of the predator in the grid world
+     * @param posNrPrey : the number (column-index of VMatrix) corresponding to the Cartesian position of the prey in the grid world
+     * @return the total expected Value the predator can get from doing any possible move from its position given by posNrPredator
+     */
+    public double calculateValue(int posNrPredator, int posNrPrey) {
+
+        double totalPossiblePositionsValue = 0;
+        int[] possiblePositionsNumbers = newPositionsNumbers(posNrPredator);
+
+        for (int i = 0; i < chancesPositions.length; i++) {
+
+            totalPossiblePositionsValue +=  chancesPositions[i]  // pi(s,a)
+                    						* getPositionValue(possiblePositionsNumbers[i], posNrPrey);
+        }
+        return totalPossiblePositionsValue;
+    }
+
+
+    /**
+     * Starts policy evaluation
      */
     public void start() {
 
         double maxValueDiff;
+        int nrIterations = 0;
 
         do {
             maxValueDiff = 0;
-
+            nrIterations++;
             // for every position in VMatrix
-            for (int i = 0; i < Environment.HEIGHT *  Environment.WIDTH ; i++) {
-                for (int j = 0; j < Environment.HEIGHT *  Environment.WIDTH ; j++) {
+            for (int posNrPredator = 0; posNrPredator < Environment.HEIGHT *  Environment.WIDTH ; posNrPredator++) {
+                for (int posNrPrey = 0; posNrPrey < Environment.HEIGHT *  Environment.WIDTH ; posNrPrey++) {
 
-                    double oldV = VMatrix[i][j];
-                    
-                    if (i != j)
-                    	VMatrix[i][j] = calculateValue(i, j); // calculate new value for state
+                    double oldV = VMatrix[posNrPredator][posNrPrey];
 
-                  //  System.out.println("VMatrix new value:" + VMatrix[i][j]);
-                    maxValueDiff = Math.max(maxValueDiff, Math.abs(VMatrix[i][j] - oldV)); // keep track of maxValueDiff in this iteration
+                    if (posNrPredator != posNrPrey)
+                    	VMatrix[posNrPredator][posNrPrey] = calculateValue(posNrPredator, posNrPrey); // calculate new value for state
+
+                    maxValueDiff = Math.max(maxValueDiff, Math.abs(VMatrix[posNrPredator][posNrPrey] - oldV)); // keep track of maxValueDiff in this iteration
                 }
             }
+            System.out.format("Policy Evaluation, iteration number: %d; maxValueDiff = %.3f %n", nrIterations, maxValueDiff);
 
-           //System.out.println("maxValueDiff:" + maxValueDiff);
-           
         } while (maxValueDiff > cutoffValueDiff); // zolang de grootste updatewaarden groter is dan maxDiff
-
     }
 
+
+    /**
+     * Constructor
+     */
     public PredatorPolicyEvaluation() {
         VMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH];
-        
-        
-        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) 
         	Arrays.fill(VMatrix[i], 0);
-        	//VMatrix[i][i]= Environment.reward(getPosition(i), getPosition(i));            
-        }
         
-        //printVMatrix();
         start();
-        //printVMatrix();
-        writeVMatrix();
+        writeVMatrix("VMatrix.m");
     }
 
-    // print the VMatrix values
+    /**
+     *  print the VMatrix values
+     */
     public void printVMatrix() {
-    	
-    	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
+
+    	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) 
     		System.out.format("%7d", j);
-    	}
+    	
         for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
         	System.out.format("%7d",i);  System.out.print("  ");
             for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++)
                 System.out.format("[%.3f]", VMatrix[i][j]);
-            
             System.out.println();
-    	
         }
-        System.out.println("=====================================");
-
     }
-    
-    public void writeVMatrix()  {
-    	    
-    	try 
-    	{
-	    	FileWriter fstream = new FileWriter("VMatrix.m",false);
-	    	BufferedWriter out = new BufferedWriter(fstream);
-	    	
-	    	out.write("clear;clc;");
-	    	out.newLine();
-	        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
-	        	out.write(String.format("C(%d,:)=[",i+1)); 
-	            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
-	            	if (j != 0)
-	            		out.write(",");
-	                String number = String.format("%.3f", VMatrix[i][j]);
-	                number = number.replaceAll(",", ".");	         
-	                out.write(number);
-	            }
-	            out.write("];");
-	            out.newLine();
-	            out.flush();
-	        }
-	        out.write("imagesc(C)");
 
-	        out.flush();
-	        fstream.close();
-	        out.close();
+    /**
+     * Write a matlab script that plots a colormap of the VMatrix to a file
+     * @param filename : filename of that script
+     */
+    public void writeVMatrix(String filename)  {
+    	try
+    	{
+            FileWriter fstream = new FileWriter(filename,false);
+            BufferedWriter out = new BufferedWriter(fstream);
+
+            out.write("clear;clc;");
+            out.newLine();
+            for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+                    out.write(String.format("C(%d,:)=[",i+1));
+                for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
+                    if (j != 0)
+                            out.write(",");
+
+                    String number;
+                    if (i == j) // Set reward at the goal states in the "VMatrix" in the script. Makes a more intuitive colormap.
+                        number = String.format("%.3f", Environment.reward(getPosition(i), getPosition(j))); 
+                    else
+                        number = String.format("%.3f", VMatrix[i][j]);
+                   
+                    out.write(number.replaceAll(",", "."));
+                }
+                out.write("];");
+                out.newLine();
+                out.flush();
+            }
+            out.write("imagesc(C, [ min(min(C)), max(max(C)) ] );");
+            out.write("colormap(gray);");
+            out.write("axis image");
+            out.flush();
+            fstream.close();
+            out.close();
     	}
     	catch(IOException e)
     	{
     		System.out.println("Error in writeVMatrix(): " + e);
     	}
-    	
-    	
     }
 
     @Override

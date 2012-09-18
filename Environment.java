@@ -2,6 +2,7 @@
 public class Environment {
 	public final static int HEIGHT = 11;
 	public final static int WIDTH = 11;
+
 	private boolean isEnded;
 	private Agent predator;
 	private Agent prey;
