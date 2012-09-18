@@ -136,10 +136,10 @@ public class PredatorPolicyEvaluation implements Agent {
         double totalValue = 0;
         for (int i = 0; i < 5; i++) {
 
-        	if (chancesPreyPositions[4]==1) {
-            	System.out.println(Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator)));
+        	//if (chancesPreyPositions[4]==1) {
+          //  	System.out.println(Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator)));
 
-        	}
+        	//}
             totalValue += chancesPreyPositions[i] * // P^{a}_{s s'}
                     (	Environment.reward(getPosition(newPreyPositions[i]), getPosition(posPredator))  // R^{a}_{s s'}
                     	+ (discountFactor * VMatrix[posPredator][newPreyPositions[i]]) // gamma * V_k{s')
@@ -243,7 +243,7 @@ public class PredatorPolicyEvaluation implements Agent {
     	    
     	try 
     	{
-	    	FileWriter fstream = new FileWriter("VMatrix.txt",false);
+	    	FileWriter fstream = new FileWriter("VMatrix.m",false);
 	    	BufferedWriter out = new BufferedWriter(fstream);
 	    	
 	    	out.write("clear;clc;");
