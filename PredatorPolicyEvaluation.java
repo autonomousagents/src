@@ -1,4 +1,7 @@
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class PredatorPolicyEvaluation implements Agent {
@@ -8,7 +11,7 @@ public class PredatorPolicyEvaluation implements Agent {
     private final static int nrMovesPrey = 4;
     private double VMatrix[][];
     private double discountFactor = 0.99;
-    private double cutoffValueDiff = 0.0001;
+    private double cutoffValueDiff = 0.02;
 
     /**
      * @param index of state in VMatrix
@@ -75,16 +78,16 @@ public class PredatorPolicyEvaluation implements Agent {
                 : (currentPos - 1) % Environment.WIDTH == Environment.WIDTH - 1
                 ? currentPos + Environment.WIDTH - 1 : currentPos - 1;
         //down
-        positionArray[3] = currentPos + Environment.WIDTH > Environment.HEIGHT * Environment.WIDTH
+        positionArray[3] = currentPos + Environment.WIDTH > (Environment.HEIGHT * Environment.WIDTH -1)
                 ? currentPos - (Environment.HEIGHT * Environment.WIDTH) + Environment.WIDTH
                 : currentPos + Environment.WIDTH;
         //still
         positionArray[4] = currentPos;
 
-        System.out.println("newPositions");
-        for (int i=0; i<5; i++)
-            System.out.print(+positionArray[i] + " ");
-        System.out.println();
+//        System.out.println("newPositions");
+//        for (int i=0; i<5; i++)
+//            System.out.print(+positionArray[i] + " ");
+//        System.out.println();
 
         return positionArray;
     }
@@ -118,12 +121,12 @@ public class PredatorPolicyEvaluation implements Agent {
         for (int i = 0; i < chancesPositions.length; i++) {
 
             totalPossiblePositionsValue += chancesPositions[i] * // pi(s,a)
-                    getPositionValue(possiblePositions[i], posPrey);
+                    						getPositionValue(possiblePositions[i], posPrey);
 
         }
 
-        System.out.println("totalPossiblePositionsValue for posPredator "+ posPredator + " (" + getPosition(posPredator).getX() + "," + getPosition(posPredator).getY() + ") : "
-                            + "and posPrey " + posPrey + " (" + getPosition(posPrey).getX() + "," + getPosition(posPrey).getY() + ") : " + totalPossiblePositionsValue);
+//        System.out.println("totalPossiblePositionsValue for posPredator "+ posPredator + " (" + getPosition(posPredator).getX() + "," + getPosition(posPredator).getY() + ") : "
+//                            + "and posPrey " + posPrey + " (" + getPosition(posPrey).getX() + "," + getPosition(posPrey).getY() + ") : " + totalPossiblePositionsValue);
         return totalPossiblePositionsValue;
     }
 
@@ -150,6 +153,7 @@ public class PredatorPolicyEvaluation implements Agent {
             }
 
            System.out.println("maxValueDiff:" + maxValueDiff);
+           
         } while (maxValueDiff > cutoffValueDiff); // zolang de grootste updatewaarden groter is dan maxDiff
 
     }
@@ -161,20 +165,54 @@ public class PredatorPolicyEvaluation implements Agent {
         }
 
         start();
-       // printVMatrix();
+        //printVMatrix();
+        writeVMatrix();
     }
 
     // print the VMatrix values
     public void printVMatrix() {
-
-        for (double[] row : VMatrix) {
-            for (double value : row) {
-                System.out.print("[" + value + "] ");
-            }
+    	
+    	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
+    		System.out.format("%7d", j);
+    	}
+        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+        	System.out.format("%7d",i);  System.out.print("  ");
+            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++)
+                System.out.format("[%.3f]", VMatrix[i][j]);
+            
             System.out.println();
+    	
         }
         System.out.println("=====================================");
 
+    }
+    
+    public void writeVMatrix()  {
+    	
+    	try 
+    	{
+	    	FileWriter fstream = new FileWriter("VMatrix.txt",false);
+	    	BufferedWriter out = new BufferedWriter(fstream);
+	    	
+	    	out.write("       ");
+	    	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) 
+	    		out.write(String.format("%7d", j));
+	    	
+	    	out.newLine();
+	        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+	        	out.write(String.format("%7d",i));  out.write("  ");
+	            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++)
+	                out.write(String.format("[%.3f]", VMatrix[i][j]));
+	            
+	            out.newLine();
+	            out.flush();
+	        }
+    	}
+    	catch(IOException e)
+    	{
+    		System.out.println("Error in writeVMatrix(): " + e);
+    	}
+    	
     }
 
     @Override
