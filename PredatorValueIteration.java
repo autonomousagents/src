@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 
@@ -30,7 +31,10 @@ public class PredatorValueIteration implements Agent{
 		double[] vPerAction= new double [nrActions];
 		int nrIterations = 0;
 		do {
-			delta = 0.0;
+			if(nrIterations == 1||nrIterations ==2||nrIterations==3){
+                            printTable();
+                        }
+                        delta = 0.0;
 			vNew = new double[Environment.HEIGHT][Environment.WIDTH][Environment.HEIGHT][Environment.WIDTH];
 			for(int i = 0; i < Environment.HEIGHT; i++){
 				for(int j = 0; j < Environment.WIDTH; j++){
@@ -52,7 +56,7 @@ public class PredatorValueIteration implements Agent{
 					}
 				}
 			}
-			v = deepCopy(vNew);
+			v = vNew;
 			nrIterations++;
 		} while(delta>theta);
 		System.out.println("nr iterations until convergence = "+nrIterations);
@@ -90,11 +94,11 @@ public class PredatorValueIteration implements Agent{
 //				System.out.println("Action (s'): " + j);
 				//V k(s')
 				double vk = v[actionsPred[i].getX()][actionsPred[i].getY()][actionsPrey[j].getX()][actionsPrey[j].getY()];
-				if(xPrey == 5 && yPrey == 5){
-					if(xPred < 8 && xPred >2 && yPred < 8 && yPred > 2){
-						System.out.println("reward voor x = " + xPred + " y = " + yPred + " = " + Environment.reward(actionsPrey[j], actionsPred[i]));
-					}
-				}
+//				if(xPrey == 5 && yPrey == 5){
+//					if(xPred < 8 && xPred >2 && yPred < 8 && yPred > 2){
+//						System.out.println("reward voor x = " + xPred + " y = " + yPred + " = " + Environment.reward(actionsPrey[j], actionsPred[i]));
+//					}
+//				}
 				// calculate v k+1 (s) per action 
 				vkP1+= pResultingStates[j]*(Environment.reward(actionsPrey[j], actionsPred[i])+ gamma*vk);
 //				if(vkP1>5.0){
@@ -105,11 +109,6 @@ public class PredatorValueIteration implements Agent{
 			}
 			vPerAction[i] = vkP1;
 		}	
-		if(xPrey == 5 && yPrey == 5){
-			if(xPred < 8 && xPred >2 && yPred < 8 && yPred > 2){
-				printArray(vPerAction, "vPerAction voor x = " + xPred + " y = " + yPred);
-			}
-		}
 		return vPerAction;
 	}
 	
@@ -131,9 +130,10 @@ public class PredatorValueIteration implements Agent{
 					probabilities[i] = 0.2/3.0;
 			}
 		}
-//		if(onPredator !=-1){
-//			printArray(probabilities, "probabilities");
-//		}
+                if(predator.getX()==prey[nrActions-1].getX()&& predator.getY()==prey[nrActions-1].getY()){
+                    double[]pr = {0.0,0.0,0.0,0.0,1.0};
+                    probabilities = pr;
+                }
 		return probabilities;
 	}
 	
@@ -219,20 +219,28 @@ public class PredatorValueIteration implements Agent{
 	private void printTable() {
 		for(int j = 0; j < Environment.WIDTH; j++){
 			for(int i = 0; i < Environment.HEIGHT; i++){
-				System.out.print(v[i][j][5][5]+" ");
+				System.out.print(round(v[i][j][5][5],2)+" ");
 			}				
 			System.out.print("\n");
 		}
+                System.out.print("\n");
 	}
 	
 	private void printArray(double[] array, String s) {
 		System.out.println(s+"\n");
 		for(int i = 0; i<array.length;i++){
-			System.out.print(array[i]+" ");
+			System.out.print(round(array[i],2)+" ");
 		}		
 		System.out.print("\n");
 	}
 	
+  public static double round(double d, int decimalPlace){
+    // see the Javadoc about why we use a String in the constructor
+    // http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html#BigDecimal(double)
+    BigDecimal bd = new BigDecimal(Double.toString(d));
+    bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
+    return bd.doubleValue();
+  }
 
 
 }
