@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 public class PredatorPolicyEvaluation implements Agent {
 
-    private final static double chancesPositions[] = {0.2, 0.2, 0.2, 0.2, 0.2}; // up, right, down left, still
-      private double policyMatrix[][][];
+    //private final static double chancesPositions[] = {0.2, 0.2, 0.2, 0.2, 0.2}; // up, right, down left, still
+    private double policyMatrix[][][];
     private final static double chancePreyMoves = 0.2;
     private final static double nrMovesPrey = 4;
     private double VMatrix[][];
@@ -55,13 +55,13 @@ public class PredatorPolicyEvaluation implements Agent {
                                     1 - chancePreyMoves};// still
 	        // find in what direction prey will stand on  predator, if there is one
 	        int predatorEqualsIndex = -1;
-	        for (int i = 0; i < chancesPositions.length && predatorEqualsIndex == -1; i++) {
+	        for (int i = 0; i < Direction.nrMoves && predatorEqualsIndex == -1; i++) {
 	            if (positionsPrey[i] == posPredator) 
 	                predatorEqualsIndex = i;	            
 	        }
 	        // if prey was next to predator at that direction-index
 	        if (predatorEqualsIndex != -1) {
-	            for (int i = 0; i < chancesPositions.length - 1; i++) 
+	            for (int i = 0; i < Direction.nrMoves - 1; i++) 
 	                chanceArray[i] = chancePreyMoves / (nrMovesPrey - 1);	            
 	            chanceArray[predatorEqualsIndex] = 0;
 	        }
@@ -78,8 +78,8 @@ public class PredatorPolicyEvaluation implements Agent {
     private int[] newPositionsNumbers(int currentPosNr) {
 
     	Position currentPos = getPosition(currentPosNr); // convert position-number to Position object
-    	int[] positionNumbersArray = new int[chancesPositions.length];
-    	Position[] positionsArray = new Position[chancesPositions.length];
+    	int[] positionNumbersArray = new int[Direction.nrMoves];
+    	Position[] positionsArray = new Position[Direction.nrMoves];
     	for (int i=0; i < positionsArray.length; i++)
     		positionsArray[i]= new Position(currentPos);
 
@@ -133,9 +133,9 @@ public class PredatorPolicyEvaluation implements Agent {
         double totalPossiblePositionsValue = 0;
         int[] possiblePositionsNumbers = newPositionsNumbers(posNrPredator);
 
-        for (int i = 0; i < chancesPositions.length; i++) {
+        for (int i = 0; i < Direction.nrMoves; i++) {
 
-            totalPossiblePositionsValue +=  chancesPositions[i]  // pi(s,a)
+            totalPossiblePositionsValue +=  policyMatrix[posNrPredator][posNrPrey][i]  // pi(s,a)
                     						* getPositionValue(possiblePositionsNumbers[i], posNrPrey);
         }
         return totalPossiblePositionsValue;
@@ -184,10 +184,25 @@ public class PredatorPolicyEvaluation implements Agent {
      
         initRandomPolicy();
         
-        start();
-        writeVMatrix("VMatrix.m");
+        //start();
+      //  writeVMatrix("VMatrix.m");
 
     }
+    
+    /**
+     * Constructor when policy is given
+     */
+    public PredatorPolicyEvaluation(double v[][]) {
+    	VMatrix = v;
+        policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
+                                 [Direction.nrMoves];
+     
+        initRandomPolicy();
+        
+        //start();
+        //writeVMatrix("VMatrix.m");
+    }
+    
     
     private void initRandomPolicy () {
     	
@@ -260,6 +275,10 @@ public class PredatorPolicyEvaluation implements Agent {
     	
     	return VMatrix;
     	
+    }
+    
+    public void setPolicy(double p[][][]) {
+    	policyMatrix = p;
     }
 
     @Override

@@ -2,11 +2,17 @@
 public class Environment {
 	public final static int HEIGHT = 11;
 	public final static int WIDTH = 11;
+	
 
 	private boolean isEnded;
 	private Agent predator;
 	private Agent prey;
 	private int predatorType=-1;
+	
+	public static final double maximumReward = 10;
+	public static final double minimumReward = 0;
+	public static final double normalReward = 0;
+
 	
 	public Environment(int predatorType){
 		
@@ -47,7 +53,7 @@ public class Environment {
 
 		switch(predatorType) {
 			case 0: predator = new PredatorRandom(new Position(0,0)); break;
-			case 1: predator = new PredatorPolicyEvaluation(); break;
+			case 1: predator = new PredatorPolicyEvaluation();  break;
 			case 2: predator = new PredatorValueIteration(new Position(0,0)); break;
 			case 3: //predator =  new PredatorPolicyIteration(..); break;
 			default: break;
@@ -58,9 +64,9 @@ public class Environment {
 	
 	public static double reward( Position prey, Position predator ){
 		if (prey.getX()==predator.getX() && prey.getY()==predator.getY())
-			return 10;
+			return maximumReward;
 		else
-			return 0;
+			return normalReward;
 	}
 
         public void setPredatorType(int nr) {
