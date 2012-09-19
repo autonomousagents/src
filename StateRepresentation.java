@@ -33,6 +33,30 @@ public class StateRepresentation {
         return -1.0;
     }
 
+    public double getVvalue(int linearIndex){
+        if(linearIndex < 6){
+            return horizontal[linearIndex];
+        }
+        else if (linearIndex < 12){
+            return vertical [linearIndex-6];
+        }
+        else{
+            return diagonal[linearIndex-12];
+        }
+    }
+
+    public void setVvalue(int linearIndex, double value){
+        if(linearIndex < 6){
+            horizontal[linearIndex]=value;
+        }
+        else if (linearIndex < 12){
+            vertical [linearIndex-6]=value;
+        }
+        else{
+            diagonal[linearIndex-12]=value;
+        }
+    }
+
     public enum Type {
      Horizontal , Vertical, Diagonal
     }
