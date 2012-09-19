@@ -13,18 +13,21 @@ public class PredatorPolicyImprovement {
     	policyMatrix = p;
     }
     
-    private Direction bestActionFromRow(double chancesActions[]) {
-    	
-    	double bestValue=Environment.minimumReward;
-    	for(int i=0; i < Direction.nrMoves; i++) {
-    		if (chancesActions[i] > bestValue) {
-    			bestValue = chancesActions[i];
-    			
-    		}
-    	}
-    	
-		return null;  	    	
-    }
+//    private Direction bestActionFromRow(double chancesActions[]) {
+//    	
+//    	double bestValue=Environment.minimumReward;
+//    	Direction bestAction = Direction.enumValues[4];
+//    	
+//    	for(int i=0; i < Direction.nrMoves; i++) {
+//    		if (chancesActions[i] > bestValue) {
+//    			bestValue = chancesActions[i];
+//    			bestAction = Direction.enumValues[i];
+//    		}
+//    	}
+//    	return bestAction;	
+//    }
+    
+  
     
     public void start() {
     	policyStable = false;
@@ -32,7 +35,9 @@ public class PredatorPolicyImprovement {
     	for (int posNrPredator = 0; posNrPredator < Environment.HEIGHT *  Environment.WIDTH ; posNrPredator++) {
             for (int posNrPrey = 0; posNrPrey < Environment.HEIGHT *  Environment.WIDTH ; posNrPrey++) {
             	
-            	double chancesActions[] = policyMatrix[posNrPredator][posNrPrey];
+            	double policyActions[] = policyMatrix[posNrPredator][posNrPrey];
+            	Direction b = bestActionFromRow(policyActions);
+            	
             }
     	}
     	

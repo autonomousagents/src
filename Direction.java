@@ -11,11 +11,13 @@ public enum Direction {
     DOWNRIGHT(6),
     DOWNLEFT (7),
     UPLEFT(8);
+    
+    
   
 
     public final static int nrMoves = 5;
     private final int intValue;
-    private final Direction[] enumValues = Direction.values();
+    public  final static Direction[] enumValues = Direction.values();
 
     Direction(int intValue) {
         this.intValue = intValue;
