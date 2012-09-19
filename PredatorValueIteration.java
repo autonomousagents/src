@@ -22,6 +22,10 @@ public class PredatorValueIteration implements Agent{
 	}	
 
 	private void calcV() {
+		//boolean first alleen voor debuggen: weghalen
+		boolean firstFive = true;
+		int nrFirst = 0;
+		
 		double delta ;
 		double[] vPerAction= new double [nrActions];
 		int nrIterations = 0;
@@ -32,23 +36,41 @@ public class PredatorValueIteration implements Agent{
 				for(int j = 0; j < Environment.WIDTH; j++){
 					for(int k = 0; k < Environment.HEIGHT; k++){
 						for(int l = 0; l<Environment.WIDTH;l++){
-							Arrays.fill(vPerAction,0);
-							vPerAction = calcVPerAction(i,j,k,l);
-							printArray(vPerAction);
-							vNew[i][j][k][l] = getMaximum(vPerAction);
-							System.out.println("vnew = " +vNew[i][j][k][l]  +" v = "+v[i][j][k][l]);
-							double difference = Math.abs(vNew[i][j][k][l]-v[i][j][k][l]);
-							if(difference>delta){
-								delta = difference;
+							if(!(i==k&&j==l)){
+									Arrays.fill(vPerAction,0);
+									vPerAction = calcVPerAction(i,j,k,l);
+									vNew[i][j][k][l] = getMaximum(vPerAction);
+									double difference = Math.abs(vNew[i][j][k][l]-v[i][j][k][l]);
+									if(difference>delta){
+										delta = difference;
+									}
+							}
+							else{
+								vNew[i][j][k][l]=0.0;
 							}
 						}
 					}
 				}
 			}
-			v = vNew;
+			v = deepCopy(vNew);
 			nrIterations++;
 		} while(delta>theta);
 		System.out.println("nr iterations until convergence = "+nrIterations);
+	}
+
+	private double[][][][] deepCopy(double[][][][] v) {
+		double[][][][] copy = new double[Environment.HEIGHT][Environment.WIDTH][Environment.HEIGHT][Environment.WIDTH];
+		for(int i = 0; i<Environment.HEIGHT;i++){
+			for(int j =0;j<Environment.WIDTH;j++){
+				for(int k = 0; k<Environment.HEIGHT;k++){
+					for(int l = 0;l<Environment.WIDTH;l++){
+						copy[i][j][k][l]=v[i][j][k][l];
+					}
+				}
+			}
+		}
+		
+		return copy;
 	}
 
 	private double[] calcVPerAction(int xPred,int yPred,int xPrey, int yPrey) {
@@ -65,13 +87,29 @@ public class PredatorValueIteration implements Agent{
 			actionsPrey = getPostions(new Position(xPrey, yPrey));
 			pResultingStates = probabilities(actionsPred[i],actionsPrey);
 			for(int j = 0; j<nrActions;j++){
+//				System.out.println("Action (s'): " + j);
 				//V k(s')
 				double vk = v[actionsPred[i].getX()][actionsPred[i].getY()][actionsPrey[j].getX()][actionsPrey[j].getY()];
-				// calculate v k+1 per action 
-				vkP1+= pResultingStates[i]*(Environment.reward(actionsPrey[j], actionsPred[i])+ vk);
+				if(xPrey == 5 && yPrey == 5){
+					if(xPred < 8 && xPred >2 && yPred < 8 && yPred > 2){
+						System.out.println("reward voor x = " + xPred + " y = " + yPred + " = " + Environment.reward(actionsPrey[j], actionsPred[i]));
+					}
+				}
+				// calculate v k+1 (s) per action 
+				vkP1+= pResultingStates[j]*(Environment.reward(actionsPrey[j], actionsPred[i])+ gamma*vk);
+//				if(vkP1>5.0){
+//					System.out.println("vk = " + vk);
+//					System.out.println("vkP1 = " + vkP1);
+//					System.out.println("reward = " + Environment.reward(actionsPrey[j], actionsPred[i])+"\n");
+//				}
 			}
 			vPerAction[i] = vkP1;
-		}		
+		}	
+		if(xPrey == 5 && yPrey == 5){
+			if(xPred < 8 && xPred >2 && yPred < 8 && yPred > 2){
+				printArray(vPerAction, "vPerAction voor x = " + xPred + " y = " + yPred);
+			}
+		}
 		return vPerAction;
 	}
 	
@@ -93,15 +131,23 @@ public class PredatorValueIteration implements Agent{
 					probabilities[i] = 0.2/3.0;
 			}
 		}
+//		if(onPredator !=-1){
+//			printArray(probabilities, "probabilities");
+//		}
 		return probabilities;
 	}
 	
 	private Position [] getPostions(Position p){
 		Position[] pos  = new Position[5];
+		//Up
 		pos[0] = new Position(p.getX(), (p.getY()+Environment.HEIGHT-1)% Environment.HEIGHT);
+		//Right
 		pos[1] = new Position((p.getX() +Environment.WIDTH+1) % Environment.WIDTH, p.getY());
+		//Down
 		pos[2] = new Position(p.getX(), (p.getY()+Environment.HEIGHT+1)% Environment.HEIGHT);
+		//Left
 		pos[3] = new Position((p.getX() +Environment.WIDTH-1) % Environment.WIDTH, p.getY());
+		//Wait
 		pos[4] = new Position(p.getX(),p.getY());
 		return pos;
 	}
@@ -138,7 +184,7 @@ public class PredatorValueIteration implements Agent{
 	}
 	
 	public void setParams(){
-		this.theta= 0.5;
+		this.theta= 0.0;
 		this.gamma = 0.8;
 	}
 	
@@ -179,7 +225,8 @@ public class PredatorValueIteration implements Agent{
 		}
 	}
 	
-	private void printArray(double[] array) {
+	private void printArray(double[] array, String s) {
+		System.out.println(s+"\n");
 		for(int i = 0; i<array.length;i++){
 			System.out.print(array[i]+" ");
 		}		
