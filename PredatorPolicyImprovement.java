@@ -2,6 +2,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class PredatorPolicyImprovement {
@@ -15,10 +16,11 @@ public class PredatorPolicyImprovement {
     private final static double nrMovesPrey = 4;
     private double discountFactor = 0.8;
 
-    public static final double doubleEpsilon = 0.00000001; // to compare double values with some tolerance
+    public static final double doubleEpsilon = 0.00001; // to compare double values with some tolerance
 
     public PredatorPolicyImprovement(double p[][][]) {
     	policyMatrix = p;
+        VMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH];
     }
 
     /**
@@ -113,6 +115,7 @@ public class PredatorPolicyImprovement {
     	double bestValue = Environment.minimumReward;
     	ArrayList<Direction> bestActions = new ArrayList<Direction>();
         double  bestActionRow[] = new double[Direction.nrMoves] ;
+        Arrays.fill(bestActionRow,0);
         int[] possiblePositionsNumbers = newPositionsNumbers(posNrPredator);
 
     	for(int i=0; i < Direction.nrMoves; i++) {
@@ -137,8 +140,12 @@ public class PredatorPolicyImprovement {
     public boolean samePolicies(double policyOne[], double policyTwo[]) {
 
         for (int i=0; i < Direction.nrMoves; i++) {
-            if (Math.abs(policyOne[i] - policyTwo[i]) > doubleEpsilon) // check if they have same probabilities
+            
+            if (Math.abs(policyOne[i] - policyTwo[i]) > doubleEpsilon) { // check if they have not same probabilities
+              //  System.out.println(policyOne[i] +  "  vs " + policyTwo[i]);
+              
                 return false;
+            }
         }
         return true;
     }
@@ -147,18 +154,26 @@ public class PredatorPolicyImprovement {
     public void start() {
     	policyStable = true;
     	
+
     	for (int posNrPredator = 0; posNrPredator < Environment.HEIGHT *  Environment.WIDTH ; posNrPredator++) {
             for (int posNrPrey = 0; posNrPrey < Environment.HEIGHT *  Environment.WIDTH ; posNrPrey++) {
             	
-            	double policyActions[] = policyMatrix[posNrPredator][posNrPrey];
-            	double currentBestActions[] = bestActionRow(posNrPredator, posNrPrey); 
+            	double givenPolicyActions[] =  Arrays.copyOf(policyMatrix[posNrPredator][posNrPrey], Direction.nrMoves);
 
-                if (!samePolicies(policyActions, currentBestActions)) {
+                double currentBestActions[] = bestActionRow(posNrPredator, posNrPrey);
+                for (int k=0; k < Direction.nrMoves; k++)
+                        policyMatrix[posNrPredator][posNrPrey][k] = currentBestActions[k];
+                
+                 
+                if (!samePolicies(givenPolicyActions, currentBestActions)) {
                     policyStable = false;
-                    policyMatrix[posNrPredator][posNrPrey] = currentBestActions;
+                   // System.out.println("state for positions [" + getPosition(posNrPredator).getX()+","+ getPosition(posNrPredator).getY() +
+                          //      "] and [" + getPosition(posNrPrey).getX()+","+ getPosition(posNrPrey).getY() + "]differ in policy");
+                   
                 }
             }
     	}
+         System.out.println();
         if (!policyStable)
             System.out.println("Policy improver says: Policy not stable yet");
     	
@@ -169,7 +184,10 @@ public class PredatorPolicyImprovement {
     }
     
     public void setVMatrix(double[][] v) {
-    	VMatrix=v;
+    	for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++)
+                VMatrix[i][j]=v[i][j];
+        }
     }
     
     public double[][][] getPolicy() {

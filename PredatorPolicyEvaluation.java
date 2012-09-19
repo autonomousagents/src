@@ -27,7 +27,7 @@ public class PredatorPolicyEvaluation implements Agent {
         	Arrays.fill(VMatrix[i], 0);
 
         policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
-                                 [Direction.nrMoves];
+		                                                                   [Direction.nrMoves];
 
         initRandomPolicy();
 
@@ -198,7 +198,7 @@ public class PredatorPolicyEvaluation implements Agent {
                     maxValueDiff = Math.max(maxValueDiff, Math.abs(VMatrix[posNrPredator][posNrPrey] - oldV)); // keep track of maxValueDiff in this iteration
                 }
             }
-            System.out.format("Policy Evaluation, iteration number: %d; maxValueDiff = %.3f %n", nrIterations, maxValueDiff);
+          //  System.out.format("Policy Evaluation, iteration number: %d; maxValueDiff = %.3f %n", nrIterations, maxValueDiff);
 
         } while (maxValueDiff > cutoffValueDiff); // zolang de grootste updatewaarden groter is dan maxDiff
     }
@@ -281,7 +281,12 @@ public class PredatorPolicyEvaluation implements Agent {
     }
     
     public void setPolicy(double p[][][]) {
-    	policyMatrix = p;
+    	for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
+                for (int k=0; k < Direction.nrMoves; k++)
+                    policyMatrix[i][j][k] = p[i][j][k];
+            }
+        }
     }
 
     @Override

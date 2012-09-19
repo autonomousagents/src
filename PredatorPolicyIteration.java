@@ -29,20 +29,23 @@ public class PredatorPolicyIteration implements Agent {
 	 }
 	 
 	 public void start() {
-		 
-		 
+
+         int iter=0;
+
         do {
+            iter++;
             policyEvaluator.setPolicy(policyMatrix);
             policyEvaluator.start();
 
             // we got the values, now give them to improver
-            VMatrix = policyEvaluator.getVMatrix();
+            setVMatrix(policyEvaluator.getVMatrix());
             policyImprover.setVMatrix(VMatrix);
 
             // start improving
             policyImprover.start();
-            policyMatrix = policyImprover.getPolicy();
-            
+            setPolicy( policyImprover.getPolicy());
+
+            System.out.println(iter);
          } while (!policyImprover.isFinished());
 	 }
 	 
@@ -72,6 +75,22 @@ public class PredatorPolicyIteration implements Agent {
 		 
 		 
 	 }
+
+     public void setPolicy(double p[][][]) {
+    	for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
+                for (int k=0; k < Direction.nrMoves; k++)
+                    policyMatrix[i][j][k] = p[i][j][k];
+            }
+        }
+    }
+
+     public void setVMatrix(double[][] v) {
+    	for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+            for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++)
+                VMatrix[i][j]=v[i][j];
+        }
+    }
 
     public void doMove(Position other) {
         throw new UnsupportedOperationException("Not supported yet.");
