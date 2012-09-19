@@ -10,11 +10,12 @@ import java.util.Arrays;
 public class PredatorPolicyEvaluation implements Agent {
 
     private final static double chancesPositions[] = {0.2, 0.2, 0.2, 0.2, 0.2}; // up, right, down left, still
+      private double policyMatrix[][][];
     private final static double chancePreyMoves = 0.2;
     private final static double nrMovesPrey = 4;
     private double VMatrix[][];
-    private double discountFactor = 0.90;
-    private double cutoffValueDiff = 0.1;
+    private double discountFactor = 0.8;
+    private double cutoffValueDiff = 0.01;
 
     /**
      * @param number of a position (index of row/column in VMatrix)
@@ -178,8 +179,22 @@ public class PredatorPolicyEvaluation implements Agent {
         for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) 
         	Arrays.fill(VMatrix[i], 0);
         
+        policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
+                                 [Direction.nrMoves];
+     
+        initRandomPolicy();
+        
         start();
         writeVMatrix("VMatrix.m");
+
+    }
+    
+    private void initRandomPolicy () {
+    	
+        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) 
+        	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) 
+        		Arrays.fill(policyMatrix[i][j], 0.2);
+        
     }
 
     /**
@@ -239,6 +254,12 @@ public class PredatorPolicyEvaluation implements Agent {
     	{
     		System.out.println("Error in writeVMatrix(): " + e);
     	}
+    }
+    
+    public double[][] getVMatrix() {
+    	
+    	return VMatrix;
+    	
     }
 
     @Override

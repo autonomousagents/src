@@ -5,8 +5,15 @@ public enum Direction {
     RIGHT (1),
     DOWN (2),
     LEFT (3),
-    STILL (4);
+    STILL (4),
+    
+    UPRIGHT(5),
+    DOWNRIGHT(6),
+    DOWNLEFT (7),
+    UPLEFT(8);
+  
 
+    public final static int nrMoves = 5;
     private final int intValue;
     private final Direction[] enumValues = Direction.values();
 
