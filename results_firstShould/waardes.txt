@@ -1,0 +1,19 @@
+discountfactor=0.8
+cutoffvaluediff = 0.01
+
+Policy Evaluation, iteration number: 1; maxValueDiff = 2.173 
+Policy Evaluation, iteration number: 2; maxValueDiff = 0.594 
+Policy Evaluation, iteration number: 3; maxValueDiff = 0.289 
+Policy Evaluation, iteration number: 4; maxValueDiff = 0.142 
+Policy Evaluation, iteration number: 5; maxValueDiff = 0.078 
+Policy Evaluation, iteration number: 6; maxValueDiff = 0.044 
+Policy Evaluation, iteration number: 7; maxValueDiff = 0.026 
+Policy Evaluation, iteration number: 8; maxValueDiff = 0.016 
+Policy Evaluation, iteration number: 9; maxValueDiff = 0.010 
+
+Notees de V-waardes uit C :
+0  60 
+35  49
+112  10
+120  0
+

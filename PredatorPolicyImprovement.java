@@ -7,20 +7,47 @@ public class PredatorPolicyImprovement {
 	
 	private double VMatrix[][];
     private double policyMatrix[][][];
-    private boolean finished ;
+    private boolean policyStable ;
     
     public PredatorPolicyImprovement(double p[][][]) {
     	policyMatrix = p;
-    	finished=false;
     }
     
+    private Direction bestActionFromRow(double chancesActions[]) {
+    	
+    	double bestValue=Environment.minimumReward;
+    	for(int i=0; i < Direction.nrMoves; i++) {
+    		if (chancesActions[i] > bestValue) {
+    			bestValue = chancesActions[i];
+    			
+    		}
+    	}
+    	
+		return null;  	    	
+    }
+    
+    public void start() {
+    	policyStable = false;
+    	
+    	for (int posNrPredator = 0; posNrPredator < Environment.HEIGHT *  Environment.WIDTH ; posNrPredator++) {
+            for (int posNrPrey = 0; posNrPrey < Environment.HEIGHT *  Environment.WIDTH ; posNrPrey++) {
+            	
+            	double chancesActions[] = policyMatrix[posNrPredator][posNrPrey];
+            }
+    	}
+    	
+    }
     
     public boolean isFinished() {
-    	return finished;    	
+    	return policyStable;    	
     }
     
     public void setVMatrix(double[][] v) {
     	VMatrix=v;
+    }
+    
+    public double[][][] getPolicy() {
+    	return policyMatrix;    	
     }
     
     public void writePolicyMatrix(String filename)  {
