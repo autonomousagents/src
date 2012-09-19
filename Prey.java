@@ -36,4 +36,6 @@ public class Prey implements Agent {
 		return myPos;
 	}
 
+    
+
 }

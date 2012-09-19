@@ -16,7 +16,7 @@ public enum Direction {
   
 
     public final static int nrMoves = 5;
-    private final int intValue;
+    public final int intValue;
     public  final static Direction[] enumValues = Direction.values();
 
     Direction(int intValue) {

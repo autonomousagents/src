@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Random;
 
 
-public class PredatorPolicyIteration {
+public class PredatorPolicyIteration implements Agent {
 	
 	 private double VMatrix[][];
 	 private double policyMatrix[][][]; // predatorstates,preystates,probabilities per actie 
@@ -22,20 +22,28 @@ public class PredatorPolicyIteration {
 		 
 		 initMatricesRandom();
 		 
-		  policyEvaluator = new PredatorPolicyEvaluation(VMatrix);
-		  policyImprover = new PredatorPolicyImprovement(policyMatrix);
+		 policyEvaluator = new PredatorPolicyEvaluation(VMatrix);
+		 policyImprover = new PredatorPolicyImprovement(policyMatrix);
+
+         start();
 	 }
 	 
 	 public void start() {
 		 
 		 
-		 // while (!policyImprover.isFinished())
-		 //		policyEvaluator.setPolicy(policyMatrix)
-		//		policyEvaluator.start();
-		 //		VMatrix = policyEvaluator.getvMatrix();
-		 //		policyImprover.setVMatrix(VMatrix);
-		 // 	policyImprover.start();
-		 // 	policyMatrix = policyImprover.getPolicy();
+        do {
+            policyEvaluator.setPolicy(policyMatrix);
+            policyEvaluator.start();
+
+            // we got the values, now give them to improver
+            VMatrix = policyEvaluator.getVMatrix();
+            policyImprover.setVMatrix(VMatrix);
+
+            // start improving
+            policyImprover.start();
+            policyMatrix = policyImprover.getPolicy();
+            
+         } while (!policyImprover.isFinished());
 	 }
 	 
 	 private void initMatricesRandom() {
@@ -64,6 +72,14 @@ public class PredatorPolicyIteration {
 		 
 		 
 	 }
+
+    public void doMove(Position other) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Position getPos() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 	 
 	 
 	

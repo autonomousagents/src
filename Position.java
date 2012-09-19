@@ -46,6 +46,8 @@ public class Position {
             return horizontal+vertical;
         }
 
+        
+
 
 	
 }

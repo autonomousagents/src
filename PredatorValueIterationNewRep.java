@@ -8,8 +8,9 @@ import java.util.Arrays;
  *
  * @author 10350470
  */
-public class PredatorValueIterationNewRep implements Agent{
+public class PredatorValueIterationNewRep {// implements Agent{
 
+    /*
     //variables new state space repr
     private final static int nrStates = 21;
     private StateRepresentation v;
@@ -206,5 +207,5 @@ public class PredatorValueIterationNewRep implements Agent{
     return bd.doubleValue();
   }
 
-
+  */
 }

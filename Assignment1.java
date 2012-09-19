@@ -48,7 +48,7 @@ public class Assignment1 {
 	 */
 	public void firstMust() {
 
-                env.setPredatorType(PredatorRandom);
+        env.setPredatorType(PredatorRandom);
                 
 		int nrRuns = 100;
 		int totalTimeSteps = 0;
@@ -78,12 +78,18 @@ public class Assignment1 {
         	env.setPredatorType(PredatorValueIteration);
         	env.reset();
         }
-        
+
+        public void thirdShould() {
+
+            env.setPredatorType(PredatorPolicyIteration);
+            env.reset();
+        }
         public static void main (String[] args) {
 		Assignment1 a = new Assignment1();
 		//a.start();
 		//a.secondMust();
-         a.firstShould();
+       //  a.firstShould();
+         a.thirdShould();
 	}
 	
 	

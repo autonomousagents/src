@@ -22,6 +22,7 @@ public class PredatorValueIteration implements Agent{
         printTable();
     }
 
+    
     private void calcV() {
 
         double delta ;
@@ -225,6 +226,8 @@ public class PredatorValueIteration implements Agent{
     bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
     return bd.doubleValue();
   }
+
+   
 
 
 }

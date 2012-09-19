@@ -17,6 +17,39 @@ public class PredatorPolicyEvaluation implements Agent {
     private double discountFactor = 0.8;
     private double cutoffValueDiff = 0.01;
 
+
+    /**
+     * Constructor
+     */
+    public PredatorPolicyEvaluation() {
+        VMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH];
+        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++)
+        	Arrays.fill(VMatrix[i], 0);
+
+        policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
+                                 [Direction.nrMoves];
+
+        initRandomPolicy();
+
+        start();
+        writeVMatrix("VMatrix.m");
+
+    }
+
+    /**
+     * Constructor when policy is given
+     */
+    public PredatorPolicyEvaluation(double v[][]) {
+    	VMatrix = v;
+        policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
+                                 [Direction.nrMoves];
+
+        initRandomPolicy();
+
+        //start();
+        //writeVMatrix("VMatrix.m");
+    }
+    
     /**
      * @param number of a position (index of row/column in VMatrix)
      * @return a Position object with correct x and y coordinates (fields), denoting the corresponding Cartesian position
@@ -171,37 +204,7 @@ public class PredatorPolicyEvaluation implements Agent {
     }
 
 
-    /**
-     * Constructor
-     */
-    public PredatorPolicyEvaluation() {
-        VMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH];
-        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) 
-        	Arrays.fill(VMatrix[i], 0);
-        
-        policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
-                                 [Direction.nrMoves];
-     
-        initRandomPolicy();
-        
-        //start();
-      //  writeVMatrix("VMatrix.m");
-
-    }
     
-    /**
-     * Constructor when policy is given
-     */
-    public PredatorPolicyEvaluation(double v[][]) {
-    	VMatrix = v;
-        policyMatrix = new double[Environment.HEIGHT * Environment.WIDTH][Environment.HEIGHT * Environment.WIDTH]
-                                 [Direction.nrMoves];
-     
-        initRandomPolicy();
-        
-        //start();
-        //writeVMatrix("VMatrix.m");
-    }
     
     
     private void initRandomPolicy () {

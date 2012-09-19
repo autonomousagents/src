@@ -7,7 +7,9 @@ public class PredatorRandom implements Agent{
 	public PredatorRandom(Position startPos){
 		myPos = startPos;
 	}
-	
+	public void start() {
+
+    }
 
 	//bla
 	@Override
@@ -35,5 +37,7 @@ public class PredatorRandom implements Agent{
 	public Position getPos() {
 		return myPos;
 	}
+
+
 
 }
