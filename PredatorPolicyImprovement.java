@@ -124,10 +124,11 @@ public class PredatorPolicyImprovement {
 
             if (thisActionValue > bestValue) {
                 bestValue = thisActionValue;
+                bestActions.clear();
                 bestActions.add(Direction.enumValues[i]);
             }
             else if (Math.abs(thisActionValue - bestValue) < doubleEpsilon) {
-                bestActions.add(Direction.enumValues[i]);
+               bestActions.add(Direction.enumValues[i]);
             }
     	}
         int nrBestActions = bestActions.size();
@@ -142,7 +143,7 @@ public class PredatorPolicyImprovement {
         for (int i=0; i < Direction.nrMoves; i++) {
             
             if (Math.abs(policyOne[i] - policyTwo[i]) > doubleEpsilon) { // check if they have not same probabilities
-              //  System.out.println(policyOne[i] +  "  vs " + policyTwo[i]);
+                //System.out.println(policyOne[i] +  "  vs " + policyTwo[i]);
               
                 return false;
             }
@@ -157,23 +158,24 @@ public class PredatorPolicyImprovement {
 
     	for (int posNrPredator = 0; posNrPredator < Environment.HEIGHT *  Environment.WIDTH ; posNrPredator++) {
             for (int posNrPrey = 0; posNrPrey < Environment.HEIGHT *  Environment.WIDTH ; posNrPrey++) {
-            	
-            	double givenPolicyActions[] =  Arrays.copyOf(policyMatrix[posNrPredator][posNrPrey], Direction.nrMoves);
 
-                double currentBestActions[] = bestActionRow(posNrPredator, posNrPrey);
-                for (int k=0; k < Direction.nrMoves; k++)
-                        policyMatrix[posNrPredator][posNrPrey][k] = currentBestActions[k];
-                
-                 
-                if (!samePolicies(givenPolicyActions, currentBestActions)) {
-                    policyStable = false;
-                   // System.out.println("state for positions [" + getPosition(posNrPredator).getX()+","+ getPosition(posNrPredator).getY() +
-                          //      "] and [" + getPosition(posNrPrey).getX()+","+ getPosition(posNrPrey).getY() + "]differ in policy");
-                   
+                if (posNrPredator != posNrPrey) {
+                    double givenPolicyActions[] =  Arrays.copyOf(policyMatrix[posNrPredator][posNrPrey], Direction.nrMoves);
+
+                    double currentBestActions[] = bestActionRow(posNrPredator, posNrPrey);
+                     for (int k=0; k < Direction.nrMoves; k++)
+                            policyMatrix[posNrPredator][posNrPrey][k] = currentBestActions[k];
+
+
+                    if (!samePolicies(givenPolicyActions, currentBestActions)) {
+                        policyStable = false;
+                       // System.out.println("state for positions [" + getPosition(posNrPredator).getX()+","+ getPosition(posNrPredator).getY() +
+                         //           "] and [" + getPosition(posNrPrey).getX()+","+ getPosition(posNrPrey).getY() + "]differ in policy");
+
+                    }
                 }
             }
     	}
-         System.out.println();
         if (!policyStable)
             System.out.println("Policy improver says: Policy not stable yet");
     	

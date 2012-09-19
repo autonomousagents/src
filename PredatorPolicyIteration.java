@@ -34,6 +34,8 @@ public class PredatorPolicyIteration implements Agent {
 
         do {
             iter++;
+            System.out.println("==> Policy Iteration: iteration nr. "+ iter);
+            
             policyEvaluator.setPolicy(policyMatrix);
             policyEvaluator.start();
 
@@ -45,7 +47,7 @@ public class PredatorPolicyIteration implements Agent {
             policyImprover.start();
             setPolicy( policyImprover.getPolicy());
 
-            System.out.println(iter);
+            
          } while (!policyImprover.isFinished());
 	 }
 	 
@@ -55,7 +57,8 @@ public class PredatorPolicyIteration implements Agent {
 		 
 		 for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++)  {
 	        	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
-	        	
+
+                    if (i != j) {
 	        			// policy
 	        			double randomArray[]=new double[Direction.nrMoves];
 	        			randomArray[0] = rand.nextDouble();
@@ -65,11 +68,16 @@ public class PredatorPolicyIteration implements Agent {
 	        			randomArray[4] = (1-randomArray[0]-randomArray[1]-randomArray[2]-randomArray[3]);
 	        			
 	        			Collections.shuffle(Arrays.asList(randomArray));
-	        			policyMatrix[i][j] = randomArray;
-	        			
+	        			policyMatrix[i][j] = Arrays.copyOf(randomArray,Direction.nrMoves);
+
 	        			// VMatrix   
-	        			VMatrix[i][j] = Environment.minimumReward + rand.nextDouble()*Environment.maximumReward;
-	        		
+	        			VMatrix[i][j] = Environment.minimumReward + rand.nextDouble()* (Environment.maximumReward - Environment.minimumReward);
+                    }
+                    else {
+                        VMatrix[i][j]=0;
+                        Arrays.fill(policyMatrix[i][j],0);
+                    }
+
 	        	}
 		 }
 		 

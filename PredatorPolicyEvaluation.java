@@ -198,7 +198,7 @@ public class PredatorPolicyEvaluation implements Agent {
                     maxValueDiff = Math.max(maxValueDiff, Math.abs(VMatrix[posNrPredator][posNrPrey] - oldV)); // keep track of maxValueDiff in this iteration
                 }
             }
-          //  System.out.format("Policy Evaluation, iteration number: %d; maxValueDiff = %.3f %n", nrIterations, maxValueDiff);
+            System.out.format("Policy Evaluation, iteration number: %d; maxValueDiff = %.15f %n", nrIterations, maxValueDiff);
 
         } while (maxValueDiff > cutoffValueDiff); // zolang de grootste updatewaarden groter is dan maxDiff
     }
