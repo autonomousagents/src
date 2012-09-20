@@ -43,6 +43,33 @@ public class PredatorPolicyIteration implements Agent {
 
 
         } while (!policyImprover.isFinished());
+
+        printAskedValues();
+
+    }
+
+    // output the values of all
+    // states in which the prey is located at (5; 5).
+     public void printAskedValues() {
+
+        Position preyPos = new Position(5,5);
+        int posNrPrey = preyPos.getPosNr();
+
+        System.out.println("The values of all states in which the prey is located at (5,5), in grid representation: ");
+
+        double gridArray[][] = new double[Environment.HEIGHT][Environment.WIDTH];
+
+        for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
+            Position predatorPos = Position.getPosition(i);
+            gridArray[predatorPos.getY()][predatorPos.getX()] = VMatrix[i][posNrPrey];
+         }
+
+        for (int i=0; i < Environment.HEIGHT; i++) {
+             for (int j=0; j < Environment.WIDTH; j++) {
+                System.out.format("[%7.3f]", gridArray[i][j]);                
+            }
+             System.out.println();
+        }
     }
 
     
