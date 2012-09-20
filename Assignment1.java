@@ -87,7 +87,7 @@ public class Assignment1 {
         public static void main (String[] args) {
 		Assignment1 a = new Assignment1();
 		//a.start();
-		//a.secondMust();
+		a.secondMust();
        //  a.firstShould();
          a.thirdShould();
 	}

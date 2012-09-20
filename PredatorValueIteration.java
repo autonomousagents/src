@@ -54,7 +54,7 @@ public class PredatorValueIteration implements Agent{
             v = vNew;
             nrIterations++;
         } while(delta>theta);
-        System.out.println("nr iterations until convergence = "+nrIterations);
+        System.out.println("==> Value Iteration  nr iterations until convergence = "+nrIterations);
     }
 
     private double[][][][] deepCopy(double[][][][] v) {
@@ -201,9 +201,12 @@ public class PredatorValueIteration implements Agent{
     }
 
     private void printTable() {
+        System.out.println("The values of all states in which the prey is located at (5,5), in grid representation: ");
+
         for(int j = 0; j < Environment.WIDTH; j++){
             for(int i = 0; i < Environment.HEIGHT; i++){
-                System.out.print(round(v[i][j][5][5],2)+" ");
+               // System.out.print(round(v[i][j][5][5],2)+" ");
+                System.out.format("[%7.3f]",v[i][j][5][5]);
             }
             System.out.print("\n");
         }
