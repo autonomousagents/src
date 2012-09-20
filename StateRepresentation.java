@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author 10350470
  */
 public class StateRepresentation {
-    private double  [] horizontal;
+    private double [] horizontal;
     private double [] vertical;
     private double [] diagonal;
 
@@ -61,8 +61,26 @@ public class StateRepresentation {
         }
     }
 
+<<<<<<< HEAD
    
     
+=======
+    public enum Type {
+	     Horizontal(0), 
+	     Vertical(1), 
+	     Diagonal(2);
+	     
+	     private final int index;   
+
+	     Type(int index) {
+	         this.index = index;
+	     }
+
+	     public int index() { 
+	         return index; 
+	     }
+    }
+>>>>>>> Verder gewerkt aan State Representation
 
     public void setVvalue(Type type, int distance, double value){
         switch (type){
@@ -73,7 +91,7 @@ public class StateRepresentation {
         }
     }
 
-    public int stateToLinearIndex(Type type, int distance){
+    public static int stateToLinearIndex(Type type, int distance){
         switch (type){
             case Horizontal: return distance;
             case Vertical:  return distance + 6;
@@ -83,17 +101,20 @@ public class StateRepresentation {
         return -1;
     }
 
-    public int linearIndexToState(int index){
-        if(index < 6){
-            return 10+index;
+    public static int[] linearIndexToState(int index){
+        if(index < 6) {
+        	int[] state = {Type.Horizontal.index(), index};
+            return state;
         }
-        else if(index <12){
-            return 20+index-6;
+        else if(index <12) {
+        	int[] state = {Type.Vertical.index(), index-6};
+            return state;
         }
         else if(index < 21){
-            return 30+index-10;
+        	int[] state = {Type.Diagonal.index(), index-10};
+            return state;
         }
-        return -1;
+        return null;
     }
 
 }

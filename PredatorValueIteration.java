@@ -169,7 +169,7 @@ public class PredatorValueIteration implements Agent{
 
     public void setParams(){
             this.theta= 0.0;
-            this.gamma = 0.8;
+            this.gamma = 0.1;
     }
 
     private double getMaximum(double [] values){
@@ -206,7 +206,9 @@ public class PredatorValueIteration implements Agent{
         for(int j = 0; j < Environment.WIDTH; j++){
             for(int i = 0; i < Environment.HEIGHT; i++){
                // System.out.print(round(v[i][j][5][5],2)+" ");
-                System.out.format("[%7.3f]",v[i][j][5][5]);
+                System.out.format("%7.6f",v[i][j][5][5]);
+                if(i == Environment.HEIGHT-1) System.out.print("\\\\");
+                else System.out.print(" & ");
             }
             System.out.print("\n");
         }

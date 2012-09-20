@@ -8,14 +8,14 @@ import java.util.Arrays;
  *
  * @author 10350470
  */
-public class PredatorValueIterationNewRep {// implements Agent{
+public class PredatorValueIterationNewRep implements Agent{
 
-    /*
     //variables new state space repr
     private final static int nrStates = 21;
-    private StateRepresentation v;
-    private StateRepresentation vNew;
-    private static final int nrActions = 2;
+    private StateRepresentation vStateRep;
+    private double v[];
+    private double vNew[];
+    private static final int nrActions = 5;
 
 
     private final static double WAIT = 0.2;
@@ -27,7 +27,7 @@ public class PredatorValueIterationNewRep {// implements Agent{
         myPos = startPos;
         startPosition=startPos;
         setParams();
-        v = new StateRepresentation();
+        v = new double[nrStates];
         calcV();
         // print table for prey at (5,5)
         printTable();
@@ -40,16 +40,18 @@ public class PredatorValueIterationNewRep {// implements Agent{
         int nrIterations = 0;
         do {
             delta = 0.0;
-            vNew = new StateRepresentation();
+            vNew = new double[nrStates];
             for(int i = 0; i<nrStates;i++){
-                if(i == v.stateToLinearIndex(StateRepresentation.Type.Vertical, 0)||i==v.stateToLinearIndex(StateRepresentation.Type.Horizontal, 0)){
+                if(i != 0) {
                     Arrays.fill(vPerAction,0);
-//                    vPerAction = calcVPerAction(i,j,k,l);
+                    vPerAction = calcVPerAction(i);
 //                    vNew[i][j][k][l] = getMaximum(vPerAction);
 //                    double difference = Math.abs(vNew[i][j][k][l]-v[i][j][k][l]);
                     if(difference>delta){
                         delta = difference;
                     }
+                } else {
+                	vNew[i] = 0.0;
                 }
             }
             v = vNew;
@@ -58,9 +60,9 @@ public class PredatorValueIterationNewRep {// implements Agent{
         System.out.println("nr iterations until convergence = "+nrIterations);
     }
 
-    private double[] calcVPerAction(int xPred,int yPred,int xPrey, int yPrey) {
+    private double[] calcVPerAction(int state) {
         double [] vPerAction = new double[nrActions];
-        Position [] actionsPred = getPostions(new Position(xPred, yPred));
+        Position [] actionsPred = getPostions(state);
         Position [] actionsPrey;
         double [] pResultingStates;
         //v k+1 per action
@@ -107,20 +109,24 @@ public class PredatorValueIterationNewRep {// implements Agent{
         return probabilities;
     }
 
-    private Position [] getPostions(Position p){
-        Position[] pos  = new Position[5];
-        //Up
+    private int[] getPostions(int state){
+    	int[] stateSpacePos = StateRepresentation.linearIndexToState(state);
+        Position[] pos  = new Position[nrActions];
+        
+        //Vertical approach
         pos[0] = new Position(p.getX(), (p.getY()+Environment.HEIGHT-1)% Environment.HEIGHT);
-        //Right
+        //Horizontal approach
         pos[1] = new Position((p.getX() +Environment.WIDTH+1) % Environment.WIDTH, p.getY());
-        //Down
+        //Vertical retreat
         pos[2] = new Position(p.getX(), (p.getY()+Environment.HEIGHT+1)% Environment.HEIGHT);
-        //Left
+        //Horizontal retreat
         pos[3] = new Position((p.getX() +Environment.WIDTH-1) % Environment.WIDTH, p.getY());
         //Wait
         pos[4] = new Position(p.getX(),p.getY());
         return pos;
     }
+    
+    
 
     @Override
     public void doMove(Position other) {
@@ -207,5 +213,4 @@ public class PredatorValueIterationNewRep {// implements Agent{
     return bd.doubleValue();
   }
 
-  */
 }
