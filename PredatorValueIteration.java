@@ -20,10 +20,22 @@ public class PredatorValueIteration implements Agent{
         calcV();
         // print table for prey at (5,5)
         printTable();
+        View.writeVMatrix("v-matrixValueIteration.m", partialMatrix());
     }
 
     
-    private void calcV() {
+    private double[][] partialMatrix() {
+		double [][] p = new double[Environment.HEIGHT][Environment.WIDTH];
+		for(int i = 0; i< Environment.HEIGHT;i++){
+			for(int j = 0;j<Environment.WIDTH;j++){
+				p[i][j] = v[i][j][5][5];
+			}
+		}
+		return p;
+	}
+
+
+	private void calcV() {
 
         double delta ;
         double[] vPerAction= new double [nrActions];
@@ -169,7 +181,7 @@ public class PredatorValueIteration implements Agent{
 
     public void setParams(){
             this.theta= 0.0;
-            this.gamma = 0.1;
+            this.gamma = 0.9;
     }
 
     private double getMaximum(double [] values){
