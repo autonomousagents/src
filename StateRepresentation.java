@@ -12,15 +12,15 @@ import java.util.Arrays;
  */
 public class StateRepresentation {
     private double stateRep[][];
-    private static final int stateRepWidth = Math.round(Environment.WIDTH/2)+1;
-    private static final int stateRepHeight = Math.round(Environment.HEIGHT/2)+1;
+    public static final int stateRepWidth = Math.round(Environment.WIDTH/2)+1;
+    public static final int stateRepHeight = Math.round(Environment.HEIGHT/2)+1;
     
     public StateRepresentation ( ){
         stateRep = new double[stateRepHeight][stateRepWidth];
         Arrays.fill(stateRep, 0.0);
     }
 
-    public double getVvalue(int horDistance, int vertDistance){
+    public double getVvalue(int vertDistance, int horDistance){
     	return stateRep [vertDistance][horDistance];
     }
 
@@ -28,10 +28,10 @@ public class StateRepresentation {
     	int [] relativeDistance = new int[2];
     	//horizontal Distance
     	relativeDistance[0] = Math.abs(prey.getX()-predator.getX());
-    	if(relativeDistance[0] > (Environment.HEIGHT)/2) relativeDistance[0] = Environment.WIDTH - relativeDistance[0];
+    	if(relativeDistance[0] > (Environment.WIDTH)/2) relativeDistance[0] = Environment.WIDTH - relativeDistance[0];
     	//vertical Distance
     	relativeDistance[1] = Math.abs(prey.getY()-predator.getY());
-    	if(relativeDistance[0] > (Environment.HEIGHT)/2) relativeDistance[0] = Environment.WIDTH - relativeDistance[0];
+    	if(relativeDistance[1] > (Environment.HEIGHT)/2) relativeDistance[1] = Environment.HEIGHT - relativeDistance[1];
     	return relativeDistance;
     }
 
