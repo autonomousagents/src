@@ -54,7 +54,9 @@ public class Environment {
 
 		switch(predatorType) {
 			case 0: predator = new PredatorRandom(new Position(0,0)); break;
-			case 1: predator = new PredatorPolicyEvaluation();  break;
+            case 1:
+                predator = (Assignment1.newRep() ? new PredatorPolicyEvaluationNewRep() : new PredatorPolicyEvaluation() );
+                break;
 			case 2: predator = new PredatorValueIteration(new Position(0,0)); break;
 			case 3: predator =  new PredatorPolicyIteration();  break;
 			default: break;

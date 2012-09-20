@@ -46,6 +46,16 @@ public class Position {
         return horizontal+vertical;
     }
 
+    public StateRepresentation.Type relativeAlignment(Position other) {
+
+        if (other.x == this.x)
+            return StateRepresentation.Type.Horizontal;
+        else if (other.y == this.y)
+            return StateRepresentation.Type.Vertical;
+        else
+            return StateRepresentation.Type.Diagonal;
+    }
+
     /**
      * @param number of a position (index of row/column in VMatrix) in the non-efficient state representation
      * @return a Position object with correct x and y coordinates (fields), denoting the corresponding Cartesian position

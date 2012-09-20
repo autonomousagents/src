@@ -15,6 +15,10 @@ public class StateRepresentation {
     private double [] vertical;
     private double [] diagonal;
 
+    public static enum Type {
+     Horizontal , Vertical, Diagonal
+    }
+    
     public StateRepresentation (){
         horizontal = new double [6];
         vertical = new double[6];
@@ -57,9 +61,8 @@ public class StateRepresentation {
         }
     }
 
-    public enum Type {
-     Horizontal , Vertical, Diagonal
-    }
+   
+    
 
     public void setVvalue(Type type, int distance, double value){
         switch (type){

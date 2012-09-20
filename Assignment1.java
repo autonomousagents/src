@@ -4,6 +4,8 @@ public class Assignment1 {
 	private Environment env;
 	private View view;
 	private int timesteps;
+
+    private static boolean  NewRep=false;
 	
 	private static final int PredatorRandom = 0, PredatorPolicyEvaluation = 1, PredatorValueIteration = 2, PredatorPolicyIteration=3;
 	
@@ -84,12 +86,25 @@ public class Assignment1 {
             env.setPredatorType(PredatorPolicyIteration);
             env.reset();
         }
+
+        public void secondShould() {
+             NewRep=true;
+             env.setPredatorType(PredatorPolicyEvaluation);
+             env.reset();
+        }
+
+        public static boolean newRep () {
+            return NewRep;
+
+        }
+
         public static void main (String[] args) {
 		Assignment1 a = new Assignment1();
 		//a.start();
-		a.secondMust();
+		//a.secondMust();
        //  a.firstShould();
-         a.thirdShould();
+        // a.thirdShould();
+        a.secondShould();
 	}
 	
 	
