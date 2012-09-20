@@ -198,7 +198,7 @@ $\gamma = 0.9 $ & 34 & 8 \\
 
 However, note that each iteration of Policy Iteration involves a call to Policy Evaluation and Policy Improvement, and both Policy Evaluation and Policy Improvement will sweep through the whole state space. Policy Improvement will do this one time, but Policy Evaluation will often do this multiple times (until the largest change of value is below the threshold $\theta$). Therefore one would be mistaken to compare these two algorithms on the number of their largest-level iterations used as an indication of computational complexity. 
 
-Note, too, that it would be a mistake to compare between the number of iterations for differently parameterized Policy Iteration algorithms. For example, using  $\gamma = 0.1 $ we need the same number of iterations as when using $\gamma = 0.9 $  for convergence, however, comparing the number of times that Policy Evaluation is invoked under these settings, we see that using the setting of $\gamma = 0.9 $ Policy Iteration had to invoke it approximately 2.45 times as much as when using the setting of $\gamma = 0.1 $. 
+Note, too, that it would be a mistake to compare between the number of iterations for differently parameterized Policy Iteration algorithms. For example, using  $\gamma = 0.1 $ we need the same number of iterations as when using $\gamma = 0.9 $  for convergence, however, comparing the number of times that Policy Evaluation is invoked under these settings, we saw that using the setting of $\gamma = 0.9 $ Policy Iteration had to invoke it approximately 2.45 times as much as when using the setting of $\gamma = 0.1 $. 
 
 \newpage
 \appendix
