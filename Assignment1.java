@@ -103,12 +103,12 @@ public class Assignment1 {
 		//a.start();
 		//a.secondMust();
        //  a.firstShould();
-<<<<<<< HEAD
+//<<<<<<< HEAD
         // a.thirdShould();
         a.secondShould();
-=======
+//=======
          //a.thirdShould();
->>>>>>> Verder gewerkt aan State Representation
+//>>>>>>> Verder gewerkt aan State Representation
 	}
 	
 	

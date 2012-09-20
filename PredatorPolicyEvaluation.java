@@ -31,7 +31,7 @@ public class PredatorPolicyEvaluation extends PolicyIterationPart implements Age
         initRandomPolicy();
 
         start();
-        writeVMatrix("VMatrix.m");
+        View.writeVMatrix("VMatrix.m", VMatrix);
 
     }
 
@@ -127,49 +127,6 @@ public class PredatorPolicyEvaluation extends PolicyIterationPart implements Age
                 System.out.format("[%.3f]", VMatrix[i][j]);
             System.out.println();
         }
-    }
-
-    /**
-     * Write a matlab script that plots a colormap of the VMatrix to a file
-     * @param filename : filename of that script
-     */
-    public void writeVMatrix(String filename)  {
-    	try
-    	{
-            FileWriter fstream = new FileWriter(filename,false);
-            BufferedWriter out = new BufferedWriter(fstream);
-
-            out.write("clear;clc;");
-            out.newLine();
-            for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
-                    out.write(String.format("C(%d,:)=[",i+1));
-                for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) {
-                    if (j != 0)
-                            out.write(",");
-
-                    String number;
-                    if (i == j) // Set reward at the goal states in the "VMatrix" in the script. Makes a more intuitive colormap.
-                        number = String.format("%.3f", Environment.reward(Position.getPosition(i), Position.getPosition(j)));
-                    else
-                        number = String.format("%.3f", VMatrix[i][j]);
-                   
-                    out.write(number.replaceAll(",", "."));
-                }
-                out.write("];");
-                out.newLine();
-                out.flush();
-            }
-            out.write("imagesc(C, [ min(min(C)), max(max(C)) ] );");
-            out.write("colormap(gray);");
-            out.write("axis image");
-            out.flush();
-            fstream.close();
-            out.close();
-    	}
-    	catch(IOException e)
-    	{
-    		System.out.println("Error in writeVMatrix(): " + e);
-    	}
     }
     
     public double[][] getVMatrix() {

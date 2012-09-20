@@ -108,22 +108,23 @@ public class PredatorPolicyEvaluationNewRep implements Agent {
 
     public double getVvalueFromPosNrs(int posNrPredator, int posNrPrey) {
         // get values for alignment and distance
-            Position predatorPos= Position.getPosition(posNrPredator);
-            Position preyPos= Position.getPosition(posNrPrey);
-            int distancePreyPredator = predatorPos.relativeDistance(preyPos);
-            StateRepresentation.Type alignment = predatorPos.relativeAlignment(preyPos);
-
-            return VHolder.getVvalue(alignment, distancePreyPredator);
+//            Position predatorPos= Position.getPosition(posNrPredator);
+//            Position preyPos= Position.getPosition(posNrPrey);
+//            int distancePreyPredator = predatorPos.relativeDistance(preyPos);
+//            StateRepresentation.Type alignment = predatorPos.relativeAlignment(preyPos);
+//
+//            return VHolder.getVvalue(alignment, distancePreyPredator);
+    	return 0;
     }
 
     public void setVvalueFromPosNrs(int posNrPredator, int posNrPrey, double value) {
         // get values for alignment and distance
-            Position predatorPos= Position.getPosition(posNrPredator);
-            Position preyPos= Position.getPosition(posNrPrey);
-            int distancePreyPredator = predatorPos.relativeDistance(preyPos);
-            StateRepresentation.Type alignment = predatorPos.relativeAlignment(preyPos);
-
-             VHolder.setVvalue(alignment, distancePreyPredator,value);
+//            Position predatorPos= Position.getPosition(posNrPredator);
+//            Position preyPos= Position.getPosition(posNrPrey);
+//            int distancePreyPredator = predatorPos.relativeDistance(preyPos);
+//            StateRepresentation.Type alignment = predatorPos.relativeAlignment(preyPos);
+//
+//             VHolder.setVvalue(alignment, distancePreyPredator,value);
     }
 
     public double getPositionValue(int posNrPredator, int posNrPrey) {

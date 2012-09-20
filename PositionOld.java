@@ -1,19 +1,19 @@
 
-public class Position {
+public class PositionOld {
 	private int x;
 	private int y;
 	
-	public Position(){
+	public PositionOld(){
 		this.x = 0;
 		this.y = 0;
 	}
 	
-	public Position(Position other){
+	public PositionOld(PositionOld other){
 		this.x = other.x;
 		this.y = other.y;
 	}
 	
-	public Position(int x, int y){
+	public PositionOld(int x, int y){
 		this.x = x;
 		this.y = y;
 	}
@@ -34,11 +34,11 @@ public class Position {
 		this.y = y;
 	}
 	
-	public boolean equals(Position other){
+	public boolean equals(PositionOld other){
 		return (this.x == other.getX() && this.y == other.getY()) ;
 	}
         
-    public int relativeDistance (Position other){
+    public int relativeDistance (PositionOld other){
         int temp = Math.abs(other.getX()-this.x);
         int horizontal = Math.min(temp, Environment.WIDTH-temp);
         temp = Math.abs(other.getY()-this.y);
@@ -46,15 +46,25 @@ public class Position {
         return horizontal+vertical;
     }
 
+//    public StateRepresentation.Type relativeAlignment(PositionOld other) {
+//
+//        if (other.x == this.x)
+//            return StateRepresentation.Type.Horizontal;
+//        else if (other.y == this.y)
+//            return StateRepresentation.Type.Vertical;
+//        else
+//            return StateRepresentation.Type.Diagonal;
+//    }
+
     /**
      * @param number of a position (index of row/column in VMatrix) in the non-efficient state representation
      * @return a Position object with correct x and y coordinates (fields), denoting the corresponding Cartesian position
      */
-    public static Position getPosition(int posNr) {
+    public static PositionOld getPosition(int posNr) {
 
         int x = posNr % Environment.WIDTH;
         int y = (int)(  (posNr - x) / Environment.WIDTH);
-        return new Position(x, y);
+        return new PositionOld(x, y);
     }
 
     /**
