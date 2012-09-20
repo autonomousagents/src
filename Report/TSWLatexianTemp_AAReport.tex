@@ -7,7 +7,7 @@
 
 \begin{document}
 
-\title{Autonomous Agents Report\\Assignment 1: Single Agent Planning}
+\title{Autonomous Agents Report}
 \author{Agnes van Belle (10363130), \\Maaike Fleuren (10350470), \\Norbert Heijne (10357769), \\Lydia Mennes (10333843)}
 \maketitle
 
@@ -25,16 +25,17 @@ As part of the assignment a mean and a standard deviation was asked for 100 runs
 \subsection{(SC) State space reduction}
 
 \subsection{(M) Value Iteration}
-For this fourth assignment the algorithm Value Iteration has been implemented. This algorithm combines the steps of policy evaluation and policy improvement. The algorithm does so by replacing the value of the $(k+1)^{th}$ iteration with the expected reward of the action that maximizes this expectation (based on the $V$-value of $s' $ of the $k^{th}$ iteration and the immediate reward of $s' $), instead of a weighted sum of the expected rewards of all actions. This algorithm uses two parameters, $\theta$, which specifies for which amount of change in the $v$-values the algorithm terminates , and $\gamma$, which is the learning rate.
+For this fourth assignment the algorithm Value Iteration has been implemented. This algorithm combines the steps of policy evaluation and policy improvement. The algorithm does so by replacing the value of the $(k+1)^{th}$ iteration with the expected reward of the action that maximizes this expectation (based on the $v$-value of $s' $ of the $k^{th}$ iteration and the immediate reward of $s' $), instead of a weighted sum of the expected rewards of all actions. This algorithm uses two parameters, $\theta$, which specifies for which amount of change in the $v$-values the algorithm terminates , and $\gamma$, which is the learning rate.
 
-The Value Iteration algorithm has been used on the MDP of this assignment using different settings of $\gamma$. The used values are $\gamma = 0.1$, $\gamma = 0.5$, $\gamma = 0.7$ and $\gamma = 0.9$. For each of these runs $\theta$ is set to 0. Since the used state representation results in $11^4$ states, we only provide the $V$-values for the states in which the prey is located at (5,5). The results can be found in table \ref{valueiterationone}, \ref{valueiteration2}, \ref{valueiteration3} and \ref{valueiteration4}.
+The Value Iteration algorithm has been used on the MDP of this assignment using different settings of $\gamma$. The used values are $\gamma = 0.1$, $\gamma = 0.5$, $\gamma = 0.7$ and $\gamma = 0.9$. For each of these runs $\theta$ is set to 0. Since the used state representation results in $11^4$ states, we only provide the $v$-values for the states in which the prey is located at (5,5). The results can be found in table \ref{tab:valueiterationone}, \ref{valueiteration2},\ref{valueiteration3} and
+  
 
-As expected the $V$-values are higher near the goal state, which is (5,5) in this specific case. This will cause the predator to move towards the prey in all cases. Also the values further from the goal state decrease faster in value for lower learning rates. The maximal $V$-value is 10, which is to be expected with a maximal reward of 10.
 
 \newpage
 \begin{landscape}
 
 \begin{table}[tbp]
+\label{tab:valueiterationone}
 \centering
 \begin{tabular} {c c c c c c c c c c c c}
  & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
@@ -50,8 +51,8 @@ As expected the $V$-values are higher near the goal state, which is (5,5) in thi
 9 & 0.000002 & 0.000011 & 0.000075 & 0.000498 & 0.003195 & 0.013773 & 0.003195 & 0.000498 & 0.000075 & 0.000011 & 0.000002\\
 10 & 0.000000 & 0.000002 & 0.000011 & 0.000074 & 0.000438 & 0.001730 & 0.000438 & 0.000074 & 0.000011 & 0.000002 & 0.000000\\
 \end{tabular}\\
-\caption{The $V$-values for Value Iteration, with $\gamma$ = 0.1 and the prey at position (5,5). The convergence speed is 20 iterations.}
-\label{valueiterationone}
+\caption{The V-values for value iteration, with $\gamma$ = 0.1 and the prey at position (5,5). The convergence speed is 20 iterations.}
+
 \end{table}
 
 \begin{table}[tbp]
@@ -70,7 +71,7 @@ As expected the $V$-values are higher near the goal state, which is (5,5) in thi
 9 & 0.0502 &  0.0924 &  0.1769 &  0.3390 &  0.6448 &  1.0814 &  0.6448 &  0.3390 &  0.1769 &  0.0924 &  0.0502\\
 10 & 0.0267 &  0.0502 &  0.0943 &  0.1768 &  0.3328 &  0.5332 &  0.3328 &  0.1768 &  0.0943 &  0.0502 &  0.0267\\
 \end{tabular}\\
-\caption{The $V$-values for Value Iteration, with $\gamma$ = 0.5 and the prey at position (5,5). The convergence speed is 28 iterations.}
+\caption{The V-values for value iteration, with $\gamma$ = 0.5 and the prey at position (5,5). The convergence speed is 28 iterations.}
 \label{valueiteration2}
 \end{table}
 
@@ -90,7 +91,7 @@ As expected the $V$-values are higher near the goal state, which is (5,5) in thi
 9 &  0.6065 &  0.8328 &  1.1750 &  1.6587 &  2.3345 &  3.0759 &  2.3345 &  1.6587 &  1.1750 &  0.8328 &  0.6065\\
 10 &  0.4348 &  0.6065 &  0.8453 &  1.1765 &  1.6463 &  2.1169 &  1.6463 &  1.1765 &  0.8453 &  0.6065 &  0.4348\\
 \end{tabular}\\
-\caption{The $V$-values for Value Iteration, with $\gamma$ = 0.7 and the prey at position (5,5). The convergence speed is 31 iterations.}
+\caption{The V-values for value iteration, with $\gamma$ = 0.7 and the prey at position (5,5). The convergence speed is 31 iterations.}
 \label{valueiteration3}
 \end{table}
 
@@ -109,7 +110,7 @@ As expected the $V$-values are higher near the goal state, which is (5,5) in thi
 8 &  4.7417 &  5.2281 &  5.8024 &  6.4401 &  7.1476 &  7.8390 &  7.1476 &  6.4401 &  5.8024 &  5.2281 &  4.7417\\
 9 &  4.2915 &  4.7118 &  5.2281 &  5.8024 &  6.4356 &  6.9973 &  6.4356 &  5.8024 &  5.2281 &  4.7118 &  4.2915\\
 10 &  3.8831 &  4.2915 &  4.7417 &  5.2374 &  5.7919 &  6.2513 &  5.7919 &  5.2374 &  4.7417 &  4.2915 &  3.8831\\\end{tabular}\\
-\caption{The $V$-values for Value Iteration, with $\gamma$ = 0.9 and the prey at position (5,5). The convergence speed is 34 iterations.}
+\caption{The V-values for value iteration, with $\gamma$ = 0.9 and the prey at position (5,5). The convergence speed is 34 iterations.}
 \label{valueiteration4}
 \end{table}
 

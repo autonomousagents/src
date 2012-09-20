@@ -204,9 +204,10 @@ public class PredatorValueIteration implements Agent{
         System.out.println("The values of all states in which the prey is located at (5,5), in grid representation: ");
 
         for(int j = 0; j < Environment.WIDTH; j++){
+        	System.out.print(j + " & ");
             for(int i = 0; i < Environment.HEIGHT; i++){
                // System.out.print(round(v[i][j][5][5],2)+" ");
-                System.out.format("%7.6f",v[i][j][5][5]);
+                System.out.format("%7.4f",v[i][j][5][5]);
                 if(i == Environment.HEIGHT-1) System.out.print("\\\\");
                 else System.out.print(" & ");
             }
