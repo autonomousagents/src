@@ -66,7 +66,7 @@ public class PredatorPolicyIteration implements Agent {
 
         for (int i=0; i < Environment.HEIGHT; i++) {
              for (int j=0; j < Environment.WIDTH; j++) {
-                System.out.format("[%7.3f]", gridArray[i][j]);                
+                System.out.format("[%8.6f]", gridArray[i][j]);
             }
              System.out.println();
         }

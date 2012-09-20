@@ -14,7 +14,7 @@ public class PredatorPolicyEvaluation extends PolicyIterationPart implements Age
     private double VMatrix[][];
 
 
-    private double cutoffValueDiff = 0.01;
+    private double cutoffValueDiff = 0;
 
 
     /**
@@ -32,6 +32,7 @@ public class PredatorPolicyEvaluation extends PolicyIterationPart implements Age
 
         start();
         View.writeVMatrix("VMatrix.m", VMatrix);
+        printVMatrix();
 
     }
 
@@ -119,12 +120,12 @@ public class PredatorPolicyEvaluation extends PolicyIterationPart implements Age
     public void printVMatrix() {
 
     	for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++) 
-    		System.out.format("%7d", j);
-    	
+    		System.out.format("%8d", j);
+    	System.out.println();
         for (int i=0; i < Environment.HEIGHT*Environment.WIDTH; i++) {
-        	System.out.format("%7d",i);  System.out.print("  ");
+        	System.out.format("%8d",i);  System.out.print("  ");
             for (int j=0; j < Environment.HEIGHT*Environment.WIDTH; j++)
-                System.out.format("[%.3f]", VMatrix[i][j]);
+                System.out.format("[%.5f]", VMatrix[i][j]);
             System.out.println();
         }
     }

@@ -101,13 +101,13 @@ public class Assignment1 {
         public static void main (String[] args) {
 		Assignment1 a = new Assignment1();
 		//a.start();
-		a.secondMust();
-       //  a.firstShould();
+		//a.secondMust();
+        //a.firstShould();
 //<<<<<<< HEAD
         // a.thirdShould();
 //        a.secondShould();
 //=======
-         //a.thirdShould();
+         a.thirdShould();
 //>>>>>>> Verder gewerkt aan State Representation
 	}
 	

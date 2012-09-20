@@ -10,7 +10,7 @@ public  class PolicyIterationPart {
 
      public final static double chancePreyMoves = 0.2;
     public final static double nrMovesPrey = 4;
-    public final static double discountFactor = 0.8;
+    public final static double discountFactor = 0.1;
 
     public double[] chancesPositionsPrey(int posPredator, int posPrey, int[] positionsPrey) {
 
