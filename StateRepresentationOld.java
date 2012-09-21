@@ -1,23 +1,18 @@
+/**
+ * Master AI UvA 2012/2013
+ * Autonomous Agents
+ * Assignment 1
+ *
+ * @authors Group 7: Agnes van Belle, Maaike Fleuren, Norbert Heijne, Lydia Mennes
+ */
 
 import java.util.Arrays;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author 10350470
- */
 public class StateRepresentationOld {
     private double [] horizontal;
     private double [] vertical;
     private double [] diagonal;
 
-//    public static enum Type {
-//     Horizontal , Vertical, Diagonal
-//    }
     
     public StateRepresentationOld (){
         horizontal = new double [6];

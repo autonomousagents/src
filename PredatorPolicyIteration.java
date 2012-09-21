@@ -1,3 +1,10 @@
+/**
+ * Master AI UvA 2012/2013
+ * Autonomous Agents
+ * Assignment 1
+ *
+ * @authors Group 7: Agnes van Belle, Maaike Fleuren, Norbert Heijne, Lydia Mennes
+ */
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +29,9 @@ public class PredatorPolicyIteration implements Agent {
         start();
     }
 
+    /**
+     * Start policy iteration
+     */
     public void start() {
 
         int iter = 0;
@@ -48,8 +58,9 @@ public class PredatorPolicyIteration implements Agent {
 
     }
 
-    // output the values of all
-    // states in which the prey is located at (5; 5).
+    /**
+     * Outputs the values of all states in which the prey is located at (5; 5).
+     **/
      public void printAskedValues() {
 
         Position preyPos = new Position(5,5);
@@ -72,7 +83,11 @@ public class PredatorPolicyIteration implements Agent {
         }
     }
 
-    
+
+     /**
+      * @param size : size (length) of return array
+      * @return array with a value in [0,1) at each position such that the values together sum to 1
+      */
     private double[] randomProbabilities(int size) {
         double[] array = new double[size];
         for (int i = 0; i < size; i++) {
@@ -87,6 +102,9 @@ public class PredatorPolicyIteration implements Agent {
     }
 
 
+    /**
+     * Initialize the policy and value matrices randomly
+     */
     private void initMatricesRandom() {
 
         for (int i = 0; i < Environment.HEIGHT * Environment.WIDTH; i++) {
@@ -115,9 +133,7 @@ public class PredatorPolicyIteration implements Agent {
        
         for (int i = 0; i < Environment.HEIGHT * Environment.WIDTH; i++) {
             for (int j = 0; j < Environment.HEIGHT * Environment.WIDTH; j++) {
-                for (int k = 0; k < Direction.nrMoves; k++) {
-                    policyMatrix[i][j][k] = p[i][j][k];
-                }
+                System.arraycopy(p[i][j], 0, policyMatrix[i][j], 0, Direction.nrMoves);
             }
         }
     }
@@ -125,9 +141,7 @@ public class PredatorPolicyIteration implements Agent {
     public void setVMatrix(double[][] v) {
        
         for (int i = 0; i < Environment.HEIGHT * Environment.WIDTH; i++) {
-            for (int j = 0; j < Environment.HEIGHT * Environment.WIDTH; j++) {
-                VMatrix[i][j] = v[i][j];
-            }
+            System.arraycopy(v[i], 0, VMatrix[i], 0, Environment.HEIGHT * Environment.WIDTH);
         }
     }
 

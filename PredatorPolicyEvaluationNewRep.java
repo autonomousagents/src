@@ -1,3 +1,11 @@
+/**
+ * Master AI UvA 2012/2013
+ * Autonomous Agents
+ * Assignment 1
+ *
+ * @authors Group 7: Agnes van Belle, Maaike Fleuren, Norbert Heijne, Lydia Mennes
+ */
+
 
 import java.util.Arrays;
 
@@ -15,7 +23,6 @@ public class PredatorPolicyEvaluationNewRep implements Agent {
     
 
 
-
     /**
      * Constructor
      */
@@ -28,7 +35,7 @@ public class PredatorPolicyEvaluationNewRep implements Agent {
 
         start();
 //        View.writeVMatrix("VMatrix.m", VMatrix);
-        VHolder.print();
+        VHolder.printLatexTable();
 
     }
 

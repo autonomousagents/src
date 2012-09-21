@@ -1,4 +1,14 @@
+/**
+ * Master AI UvA 2012/2013
+ * Autonomous Agents
+ * Assignment 1
+ *
+ * @authors Group 7: Agnes van Belle, Maaike Fleuren, Norbert Heijne, Lydia Mennes
+ */
 
+/**
+ * Class for Cartesian coordinates position
+ */
 public class Position {
 	private int x;
 	private int y;

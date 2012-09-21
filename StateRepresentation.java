@@ -1,10 +1,13 @@
+/**
+ * Master AI UvA 2012/2013
+ * Autonomous Agents
+ * Assignment 1
+ *
+ * @authors Group 7: Agnes van Belle, Maaike Fleuren, Norbert Heijne, Lydia Mennes
+ */
 
 import java.util.Arrays;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 public class StateRepresentation {
     private double stateRep[][];
@@ -154,7 +157,7 @@ public class StateRepresentation {
         return stateRep;
        }
        
-    public void print(){
+    public void printLatexTable(){
         for(int i = 0;i< stateRepHeight;i++){
         	System.out.println(i + " & ");
         	for(int j = 0; j<stateRepWidth;j++){

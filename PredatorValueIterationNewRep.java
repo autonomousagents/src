@@ -1,13 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-import java.math.BigDecimal;
-import java.util.Arrays;
 /**
+ * Master AI UvA 2012/2013
+ * Autonomous Agents
+ * Assignment 1
  *
- * @author 10350470
+ * @authors Group 7: Agnes van Belle, Maaike Fleuren, Norbert Heijne, Lydia Mennes
  */
+
+import java.util.Arrays;
+
 public class PredatorValueIterationNewRep implements Agent{
 
     //variables new state space repr
@@ -29,7 +29,7 @@ public class PredatorValueIterationNewRep implements Agent{
         v = new StateRepresentation();
         calcV();
         // print table
-        v.print();
+        v.printLatexTable();
     }
 
     /**
