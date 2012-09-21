@@ -149,4 +149,20 @@ public class StateRepresentation {
     	}
     }
 
+    public double[][] getMatrix(){
+        return stateRep;
+       }
+       
+    public void print(){
+        for(int i = 0;i< stateRepHeight;i++){
+        	System.out.println(i + " & ");
+        	for(int j = 0; j<stateRepWidth;j++){
+        		System.out.format("%7.4f",stateRep[i][j]);
+        		if(j!=stateRepWidth-1){
+        			System.out.print(" & ");
+        		}
+        	}
+        System.out.println("\\\\");
+        }
+    } 
 }
