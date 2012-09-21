@@ -7,10 +7,15 @@ public enum Direction {
     LEFT (3),
     STILL (4),
     
-    UPRIGHT(5),
-    DOWNRIGHT(6),
-    DOWNLEFT (7),
-    UPLEFT(8);
+    //Wind directions
+    NNW(5),
+    NNO(6),
+    ONO(7),
+    OZO(8),
+    ZZO(9),
+    ZZW(10),
+    WZW(11),
+    WNW(12);
     
     
   
