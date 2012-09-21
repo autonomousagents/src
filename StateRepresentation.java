@@ -10,6 +10,8 @@ public class StateRepresentation {
     private double stateRep[][];
     public static final int stateRepWidth = Math.round(Environment.WIDTH/2)+1;
     public static final int stateRepHeight = Math.round(Environment.HEIGHT/2)+1;
+    public static final int nrActions = 4;
+    public static final int nrStates = 21;
     
     /**
      * Constructor which initializes the state space representation
