@@ -10,7 +10,7 @@ public class StateRepresentation {
     private double stateRep[][];
     public static final int stateRepWidth = Math.round(Environment.WIDTH/2)+1;
     public static final int stateRepHeight = Math.round(Environment.HEIGHT/2)+1;
-    public static final int nrActions = 4;
+    public static final int nrActions = 5;
     public static final int nrStates = 21;
     
     /**
@@ -29,7 +29,8 @@ public class StateRepresentation {
     	HorizontalApproach,
     	HorizontalRetreat,
     	VerticalApproach,
-    	VerticalRetreat;
+    	VerticalRetreat,
+    	Wait;
     }
     
     /**
@@ -66,6 +67,7 @@ public class StateRepresentation {
     	case VerticalRetreat: 
     		if(pos.getY() == stateRepHeight-1) return linearIndex;
     		else return linearIndex + pos.getY() +1;
+    	case Wait: return linearIndex;
     	}
     	return 0;
     }
