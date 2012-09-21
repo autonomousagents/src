@@ -50,13 +50,13 @@ public class PredatorValueIterationNewRep implements Agent{
                     //calculate v-value for each action
                     vPerAction = calcVPerAction(i);
                     //determine maximal action and replace v
-                    vNew.setVValue(i, getMaximum(vPerAction));
+                    vNew.setVvalue(i, getMaximum(vPerAction));
                     double difference = Math.abs(vNew.getVvalue(i)-v.getVvalue(i));
                     if(difference>delta){
                         delta = difference;
                     }
                 } else {
-                	vNew.setVValue(i, 0.0);
+                	vNew.setVvalue(i, 0.0);
                 }
             }
             v = vNew;

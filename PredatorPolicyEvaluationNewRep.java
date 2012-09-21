@@ -11,7 +11,7 @@ public class PredatorPolicyEvaluationNewRep implements Agent {
     private final static int preypos = 0;
     public final static double chancePreyMoves = 0.2;
     public final static double nrMovesPrey = 4;
-    public final static double discountFactor = 0.1;
+    public final static double discountFactor = 0.8;
     
 
 
@@ -93,13 +93,10 @@ public class PredatorPolicyEvaluationNewRep implements Agent {
             System.out.format("Policy Evaluation, iteration number: %d; maxValueDiff = %.15f %n", nrIterations, maxValueDiff);
 
         } while (maxValueDiff > cutoffValueDiff); // zolang de grootste updatewaarden groter is dan maxDiff
+        View.writeVMatrix("VMatrix.m", getVMatrix());
     }
-
-
     
-    
-    
-    private void initRandomPolicy () {
+    private void initRandomPolicy() {
     	
         for (int i=0; i < policyMatrix.length; i++) 
         	for (int j=0; j < policyMatrix[i].length; j++) 
@@ -109,8 +106,8 @@ public class PredatorPolicyEvaluationNewRep implements Agent {
     
     public double[][] getVMatrix() {
     	
-    	//return VHolder.getMatrix();
-    	return null;
+    	return VHolder.getMatrix();
+
     }
     
     public void setPolicy(double p[][][]) {
