@@ -6,21 +6,23 @@ import java.util.Arrays;
  * and open the template in the editor.
  */
 
-/**
- *
- * 
- */
 public class StateRepresentation {
     private double stateRep[][];
     public static final int stateRepWidth = Math.round(Environment.WIDTH/2)+1;
     public static final int stateRepHeight = Math.round(Environment.HEIGHT/2)+1;
     
+    /**
+     * Constructor which initializes the state space representation
+     */
     public StateRepresentation ( ){
         stateRep = new double[stateRepHeight][stateRepWidth];
         Arrays.fill(stateRep, 0.0);
         fillUnused();
     }
     
+    /**
+     * Enumerator listing all possible actions in the state space
+     */
     public enum Action {
     	HorizontalApproach,
     	HorizontalRetreat,
@@ -28,11 +30,23 @@ public class StateRepresentation {
     	VerticalRetreat;
     }
     
+    /**
+     * Provides the v-value for a linear index in the state space
+     * @param linearIndex of state s
+     * @return v-value corresponding to s
+     */
     public double getVvalue(int linearIndex){
     	Position pos = linearIndexToPosition(linearIndex);
     	return stateRep[pos.getY()][pos.getX()];
     }
 
+    /**
+     * Returns the state s' for state s corresponding to linear index and the provided action 
+     * (without considering possible movement of other agent)
+     * @param linearIndex = linear index of state s
+     * @param action = action taken from state s
+     * @return linear index of state s' resulting from that action.
+     */
     public int getLinearIndexForAction(int linearIndex, Action action){
     	Position pos = linearIndexToPosition(linearIndex);
     	if(linearIndex == 0)return 0;
@@ -44,17 +58,32 @@ public class StateRepresentation {
     		Position tempPos = linearIndexToPosition(linearIndex+1);
     		if(tempPos.getY() == pos.getY()) return linearIndex+1;
     		else return linearIndex+pos.getX()+1;
-    	VerticalApproach,
-//    	VerticalRetreat;
+    	case VerticalApproach:
+    		if(pos.getX() == pos.getY()) return linearIndex-1;
+    		else return linearIndex - pos.getY();
+    	case VerticalRetreat: 
+    		if(pos.getY() == stateRepHeight-1) return linearIndex;
+    		else return linearIndex + pos.getY() +1;
     	}
-    	return 0.0;
+    	return 0;
     }
     
+    /**
+     * Returns the reward of state s corresponding to the provided linear index
+     * @param linearIndex = linear index of state s
+     * @return reward received in state s
+     */
     public double getReward(int linearIndex){
     	if(linearIndex == 0)return Environment.maximumReward;
     	else return Environment.minimumReward;
     }
     
+    /**
+     * Provides the relative distance for two positions
+     * @param predator = position of predator agent
+     * @param prey = position of prey agent
+     * @return relative distance (horizontal distance and vertical distance) between the two positions.
+     */
     public int[] getRelDistance(Position predator, Position prey){
     	int [] relativeDistance = new int[2];
     	//horizontal Distance
@@ -66,6 +95,12 @@ public class StateRepresentation {
     	return relativeDistance;
     }
 
+    /**
+     * Provides the linear index corresponding to a horizontal and vertical distance between two agents
+     * @param x = horizontal distance
+     * @param y = vertical distance
+     * @return = linear index of s in the statespace
+     */
     public static int relDistanceToLinearIndex(int x, int y){
     	if(x > y){ 
     		int i = x;
@@ -80,6 +115,11 @@ public class StateRepresentation {
     	return linearIndex;
     }
     
+    /**
+     * Returns the linear position in the state space as an x and y coordinate within a Position object
+     * @param linearIndex = linear index of state s in state space
+     * @return position of state s in state space as x and y coordinate in a Position object
+     */
     public static Position linearIndexToPosition(int linearIndex){
     	int y = 0;
     	int oldSumY = 0;
@@ -94,6 +134,9 @@ public class StateRepresentation {
     	return new Position(x, y);
     }
     
+    /**
+     * Fill the unused half of the state space with -1.0 
+     */
     private void fillUnused(){
     	for(int i = 0;i<stateRepHeight;i++){
     		for(int j = i+1;j<stateRepWidth;j++){
