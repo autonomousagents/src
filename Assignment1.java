@@ -107,7 +107,9 @@ public class Assignment1 {
         // a.thirdShould();
 //        a.secondShould();
 //=======
-         a.thirdShould();
+         //a.thirdShould();
+		Position p = StateRepresentation.linearIndexToPosition(7);
+		System.out.print(p.getX()+ ", "+p.getY());
 //>>>>>>> Verder gewerkt aan State Representation
 	}
 	
