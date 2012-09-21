@@ -31,29 +31,41 @@
 \maketitle
 
 \section{Introduction}
-This report has been written for the Master Artificial Intelligence course Autonomous Agents. The assignments that will be worked out in detail in this report include the following topics: ``Single Agent Planning, Single Agent Learning, and Multi-Agent Planning and Learning''. In this report motivation will be given for the design choices and specific programming choices that have been made. The explanation and motivation follows the must-have (depicted by \textbf{M}) and should/could-have (depicted by \textbf{SC}) structure that has been set up for the assignments. By doing so we hope to make our report easy to read for the teachers/assistants that will be grading this.
+This report has been written for the Master Artificial Intelligence course Autonomous Agents. This report will contain the answers, motivation and explanation for our implementations of the tasks we had to accomplish in our first assignment for this course. These taks were centered around the topic of ``Single Agent Planning''. 
 
-\section{\emph{Assignment 1}: Single Agent Planning}
+\subsection{The Environment}\label{environment}
+In all tasks there is assumed to be a grid world (of $11 \times 11$) with a predator and a prey in it. The agents can both move one tile forward each iteration. The direction they take (or if they move at all) is affected by probabilities (their policies). If they move over the edge of the grid they end up at the opposing side of the grid. The prey will never step into the predator. We are focused on improving the decisions of one agent, the predator. 
 
-\subsection{(M) Simulating the Environment}
+
+
+\section{Simulating the environment}
+A first task was to write a simulator for the environment as defined in Section \ref{environment}.
+
 The choice has been made to not encode the positions of the agents as part of a grid, i.e. matrix. Instead the agents both know their own position and on each iteration the position of the other agent is given as input by the environment, as we have stated in the Agent interface. This is needed for prey to see if the predator is next to it, to prevent it moving towards the prey. In the predator's case it might be necessary later on to know the position of the prey although it is not necessary for this particular sub-assignment.
 
 As part of the assignment a mean and a standard deviation was asked for 100 runs with the use of the random policy for the predator's behaviour. For the exact output, one can consult Appendix \ref{app:firstMust}. The lowest amount of time steps observed was 19 time steps. The optimal amount of time steps given that the prey would remain still throughout the trial run would be 10. The highest amount observed was 1194 steps. The average amount of time steps was 296.93 time steps and the standard deviation was 244.55 time steps (rounded up). This is a clear indication of the inefficiency of the random policy in this particular setting. 
 
-\subsection{(SC) State space reduction}
-In the experiments described in all following sections, unless stated otherwise, we used a state space that ...\\
-\emph{ (uitleg default state space)}\\
-We will refer to this state space as the ``default'' state space.\\
 
-We elaborated on a more efficient representation for the states, and finally contrived one consisting of $30$ states, an approximately $488$ times smaller one than the default state space.  We will refer to this state space as the ``efficient''' state space. This state space... \\
-\emph{(uitleg efficiente state space)}
+\section{Planning for the Environment}
+It is possible for the predator to develop a more sophisticated policy by planning. Given that that the whole environment is known to the agent, we can make use of several dynamic programming planning algorithms, and we will discuss our implementtaion of these in the subsections below.
 
-\subsection{(SC) Policy Evaluation}
-\emph{Bla bla uitleg algoritme}\\
+\subsection{ Policy Evaluation}
+The algorithm for Policy Evaluation follows from turning the Bellman equation into an update rule, such that each iteration of Policy Evaluation, Equation \ref{eq:policyEvaluation} is used for every $s \in \mathcal S$ (where $\mathcal S$ denotes the set of states).
+\begin{equation}\label{eq:policyEvaluation}
+V_{k+1}(s) \leftarrow \sum_{a} \pi (s,a) \sum_{s'}  \mathcal P_{s s'}^{a} \left( \mathcal R_{s s'}^{a} 
++ \gamma V_{k}(s') \right) 
+\end{equation}
+Because we used the random policy for the predtaor, and there were five actions possible for the predator, Equation \ref{eq:policyEvaluation} could be simplified to Equation \ref{eq:policyEvaluationSimpler}.
+\begin{equation}\label{eq:policyEvaluationSimpler}
+V_{k+1}(s) \leftarrow \frac{1}{5} \sum_{a}  \sum_{s'}  \mathcal P_{s s'}^{a} \left( \mathcal R_{s s'}^{a} 
++ \gamma V_{k}(s') \right) 
+\end{equation}
+Where $\mathcal P_{s s'}^{a}$ has to take into account the possible movements of the prey. Note that $\mathcal R_{s s'}^{a}$ was always zero, except for the single goal state.
 
+We implemented Policy Evaluation using a $121 \times 121$ matrix to hold the $V$- values for the states. 
 It took $111$ iterations to converge using $\theta = 0$ and $\gamma = 0.8$.
 
-In the following list we show some values that Policy Evaluation found for specific state space configurations:
+In the following list we show some values that Policy Evaluation found for specific states:
 \begin{itemize}\label{list:policyEvaluationListValues}
 \item{\textbf{Predator(0,0), Prey(5,5)}}: $0.0060$		
 \item{\textbf{Predator(2,3), Prey(5,4)}}: $0.1820$
@@ -71,8 +83,40 @@ In the following list we show some values that Policy Evaluation found for speci
         			 The brighter the color the higher the corresponding $V$-value.}        
 \end{figure}
 
-\subsection{(M) Value Iteration}
-For this fourth assignment the algorithm Value Iteration has been implemented. This algorithm combines the steps of policy evaluation and policy improvement. The algorithm does so by replacing the value of the $(k+1)^{th}$ iteration with the expected reward of the action that maximizes this expectation (based on the $V$-value of $s' $ of the $k^{th}$ iteration and the immediate reward of $s' $), instead of a weighted sum of the expected rewards of all actions. This algorithm uses two parameters, $\theta$, which specifies for which amount of change in the $v$-values the algorithm terminates , and $\gamma$, which is the learning rate.
+
+\subsection{(SC) Policy Iteration}
+\emph{Bla bla Uitleg algoritme} \\
+
+The values we found by running Policy Iteration, letting $\theta = 0$ and varying $\gamma$ to be 0.1, 0.5, 0.7 and 0.9, are exactly the same as those we found with our implementation of Value Iteration, and can thus be found in Tables \ref{valueiterationone}, \ref{valueiteration2}, \ref{valueiteration3} and \ref{valueiteration4}.
+
+The convergence speed in numbers of iterations is different, however. We give an overview in Table \ref{tab:policyEvaluationValues}.
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline 
+• & Iterations V.I. & Iterations P.I. \\ 
+\hline 
+$\gamma = 0.1 $ & 20 & 8 \\ 
+\hline 
+$\gamma = 0.5 $ & 28 & 7 \\ 
+\hline 
+$\gamma = 0.7 $  & 31 & 7 \\ 
+\hline 
+$\gamma = 0.9 $ & 34 & 8 \\ 
+\hline 
+\end{tabular}
+\caption{Comparison of iterations of Value Iteration and Policy Iteration}
+\label{tab:policyEvaluationValues} 
+\end{table}
+
+However, note that each iteration of Policy Iteration involves a call to Policy Evaluation and Policy Improvement, and both Policy Evaluation and Policy Improvement will sweep through the whole state space. Policy Improvement will do this one time, but Policy Evaluation will often do this multiple times (until the largest change of value is below the threshold $\theta$). Therefore one would be mistaken to compare these two algorithms on the number of their largest-level iterations used as an indication of computational complexity. 
+
+Note, too, that it would be a mistake to compare between the number of iterations for differently parameterized Policy Iteration algorithms. For example, using  $\gamma = 0.1 $ we need the same number of iterations as when using $\gamma = 0.9 $  for convergence, however, comparing the number of times that Policy Evaluation is invoked under these settings, we saw that using the setting of $\gamma = 0.9 $ Policy Iteration had to invoke it approximately 2.45 times as much as when using the setting of $\gamma = 0.1 $. 
+
+\subsection{Value Iteration}
+
+Value Iteration is another planning algorithm. This algorithm combines the steps of policy evaluation and policy improvement. The algorithm does so by replacing the value of the $(k+1)^{th}$ iteration with the expected reward of the action that maximizes this expectation (based on the $V$-value of $s' $ of the $k^{th}$ iteration and the immediate reward of $s' $), instead of a weighted sum of the expected rewards of all actions. This algorithm uses two parameters, $\theta$, which specifies for which amount of change in the $v$-values the algorithm terminates , and $\gamma$, which is the learning rate.
 
 The Value Iteration algorithm has been used on the MDP of this assignment using different settings of $\gamma$. The used values are $\gamma = 0.1$, $\gamma = 0.5$, $\gamma = 0.7$ and $\gamma = 0.9$. For each of these runs $\theta$ is set to 0. Since the used state representation results in $11^4$ states, we only provide the $V$-values for the states in which the prey is located at (5,5). The results can be found in Tables \ref{valueiterationone}, \ref{valueiteration2}, \ref{valueiteration3} and \ref{valueiteration4}. A representation of the $V$-values which nicely shows the decrease of the $V$-values further from the goal state can be found in figure \ref{colormapValueIteration}. Here, the symmetry of the state space becomes apparent.
 
@@ -170,35 +214,17 @@ As expected the $V$-values are higher near the goal state, which is (5,5) in thi
 
 \end{landscape}
 
-\subsection{(SC) Policy Iteration}
-\emph{Bla bla Uitleg algoritme} \\
 
-The values we found by running Policy Iteration, letting $\theta = 0$ and varying $\gamma$ to be 0.1, 0.5, 0.7 and 0.9, are exactly the same as those we found with our implementation of Value Iteration, and can thus be found in Tables \ref{valueiterationone}, \ref{valueiteration2}, \ref{valueiteration3} and \ref{valueiteration4}.
+\section{(SC) State space reduction}
+In the experiments described in all following sections, unless stated otherwise, we used a state space that ...\\
+\emph{ (uitleg default state space)}\\
+We will refer to this state space as the ``default'' state space.\\
 
-The convergence speed in numbers of iterations is different, however. We give an overview in Table \ref{tab:policyEvaluationValues}.
+We elaborated on a more efficient representation for the states, and finally contrived one consisting of $30$ states, an approximately $488$ times smaller one than the default state space.  We will refer to this state space as the ``efficient''' state space. This state space... \\
+\emph{(uitleg efficiente state space)}
 
-\begin{table}[htb]
-\centering
-\begin{tabular}{|c|c|c|}
-\hline 
-• & Iterations V.I. & Iterations P.I. \\ 
-\hline 
-$\gamma = 0.1 $ & 20 & 8 \\ 
-\hline 
-$\gamma = 0.5 $ & 28 & 7 \\ 
-\hline 
-$\gamma = 0.7 $  & 31 & 7 \\ 
-\hline 
-$\gamma = 0.9 $ & 34 & 8 \\ 
-\hline 
-\end{tabular}
-\caption{Comparison of iterations of Value Iteration and Policy Iteration}
-\label{tab:policyEvaluationValues} 
-\end{table}
-
-However, note that each iteration of Policy Iteration involves a call to Policy Evaluation and Policy Improvement, and both Policy Evaluation and Policy Improvement will sweep through the whole state space. Policy Improvement will do this one time, but Policy Evaluation will often do this multiple times (until the largest change of value is below the threshold $\theta$). Therefore one would be mistaken to compare these two algorithms on the number of their largest-level iterations used as an indication of computational complexity. 
-
-Note, too, that it would be a mistake to compare between the number of iterations for differently parameterized Policy Iteration algorithms. For example, using  $\gamma = 0.1 $ we need the same number of iterations as when using $\gamma = 0.9 $  for convergence, however, comparing the number of times that Policy Evaluation is invoked under these settings, we saw that using the setting of $\gamma = 0.9 $ Policy Iteration had to invoke it approximately 2.45 times as much as when using the setting of $\gamma = 0.1 $. 
+\section{Conclusion}
+Bla bla
 
 \newpage
 \appendix
