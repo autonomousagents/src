@@ -18,7 +18,7 @@ public class StateRepresentation {
      */
     public StateRepresentation ( ){
         stateRep = new double[stateRepHeight][stateRepWidth];
-        Arrays.fill(stateRep, 0.0);
+        for(double[] row: stateRep)Arrays.fill(row, 0.0);
         fillUnused();
     }
     
@@ -59,6 +59,7 @@ public class StateRepresentation {
     		else return linearIndex -1;
     	case HorizontalRetreat: 
     		Position tempPos = linearIndexToPosition(linearIndex+1);
+    		if(pos.getX()== stateRepWidth-1 && pos.getY() == stateRepHeight-1) return linearIndex;
     		if(tempPos.getY() == pos.getY()) return linearIndex+1;
     		else return linearIndex+pos.getX()+1;
     	case VerticalApproach:
@@ -165,4 +166,9 @@ public class StateRepresentation {
         System.out.println("\\\\");
         }
     } 
+    
+    public void setVvalue(int linearIndex, double value){
+    	Position pos = linearIndexToPosition(linearIndex);
+    	stateRep[pos.getY()][pos.getX()] = value;
+    }
 }

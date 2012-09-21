@@ -5,7 +5,7 @@ public class Assignment1 {
 	private View view;
 	private int timesteps;
 
-    private static boolean  NewRep=false;
+    private static boolean  NewRep=true;
 	
 	private static final int PredatorRandom = 0, PredatorPolicyEvaluation = 1, PredatorValueIteration = 2, PredatorPolicyIteration=3;
 	
@@ -72,7 +72,7 @@ public class Assignment1 {
 	}
 
         public void firstShould() {            
-            env.setPredatorType(PredatorPolicyEvaluation);
+        	env.setPredatorType(PredatorPolicyEvaluation);
             env.reset();
         }
         
@@ -102,14 +102,12 @@ public class Assignment1 {
 		Assignment1 a = new Assignment1();
 		//a.start();
 		//a.secondMust();
-        //a.firstShould();
+        a.firstShould();
 //<<<<<<< HEAD
         // a.thirdShould();
 //        a.secondShould();
 //=======
          //a.thirdShould();
-		Position p = StateRepresentation.linearIndexToPosition(7);
-		System.out.print(p.getX()+ ", "+p.getY());
 //>>>>>>> Verder gewerkt aan State Representation
 	}
 	
