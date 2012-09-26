@@ -1,4 +1,3 @@
-/**
  * Master AI UvA 2012/2013
  * Autonomous Agents
  * Assignment 1
